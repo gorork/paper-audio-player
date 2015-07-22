@@ -1,0 +1,34 @@
+{
+  "name": "flat-audio-player",
+  "version": "0.0.1",
+  "authors": [
+    "Nadi Dikun <dikunn@gmail.com>"
+  ],
+  "description": "A custom audio player with flat design.",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "audio",
+    "player",
+    "flat",
+    "minimalistic"
+  ],
+  "main": "flat-audio-player.html",
+  "license": "MIT",
+  "homepage": "http://nadikun.com/code/flat-audio-player/",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "paper-progress": "PolymerElements/paper-progress#~1.0.1",
+    "iron-icons": "PolymerElements/iron-icons#~1.0.3"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "*"
+  }
+}

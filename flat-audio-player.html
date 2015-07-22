@@ -1,0 +1,347 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-progress/paper-progress.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/av-icons.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <flat-audio-player></flat-audio-player>
+
+@demo
+-->
+<dom-module id="flat-audio-player">
+
+  <style>
+    :host {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      font-family: 'Roboto Mono', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    #wrapper {
+      position: relative;
+      cursor: pointer;
+      height: 50px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.3);
+    }
+
+    #canvas {
+      height: 50px;
+      width: 500px;
+      position: absolute;
+    }
+
+    #left,
+    #right {
+      height: 50px;
+      width: 50px;
+      position: relative;
+    }
+
+    #right {
+      background-color: rgba(255,255,255,.75);
+    }
+
+    #time,
+    #icon,
+    #pause {
+      color: #fff;
+    }
+
+    #time,
+    #duration,
+    #title {
+      text-align: center;
+      line-height: 50px;
+    }
+
+    #time,
+    #duration {
+      font-size: 11px;
+    }
+
+    #icon,
+    #pause,
+    #replay {
+      margin: auto;
+    }
+
+    #title {
+      z-index: 2;
+      font-size: 15px;
+    }
+
+    #pause {
+      opacity: 0;
+    }
+
+    :host paper-progress {
+      position: relative;
+      width: 100%;
+      height: 50px;
+      --paper-progress-container-color: rgba(255,255,255,.75);
+    }
+
+    /* On hover */
+
+    :host(.hovered) #pause {
+      opacity: 1;
+    }
+
+    :host(.hovered) #time {
+      opacity: 0;
+    }
+
+    :host(.hovered) #title {
+      color: #333 !important;
+    }
+
+    /* On Error */
+
+    :host(.cantplay) #title {
+      font-size: 12px;
+    }
+
+    :host(.cantplay) #wrapper {
+      cursor: default;
+    }
+
+  </style>
+
+  <template>
+    <div id="wrapper"
+         class="layout horizontal"
+         on-click="playPause"
+         on-mouseenter="onMouseenter"
+         on-mouseleave="onMouseleave">
+
+      <div id="canvas"></div>
+
+      <div id="left">
+        <!-- Icon -->
+        <iron-icon id="icon" class="fit" icon="{{ icon }}" hidden$="{{ isPlaying }}"></iron-icon>
+        <iron-icon id="pause" class="fit" icon="av:pause-circle-outline" hidden$="{{ !isPlaying }}"></iron-icon>
+
+        <!-- Current time -->
+        <div id="time" class="fit" hidden$="{{ !isPlaying }}">
+          <span class="fit">{{ convertSecToMin(currentTime) }}</span>
+        </div>
+      </div>
+
+      <div class="flex">
+        <!-- Title -->
+        <div id="title" class="fit">{{ title }}</div>
+
+        <!-- Audio HTML5 element -->
+        <audio id="audio" src="{{ src }}"></audio>
+
+        <!-- Paper progress bar -->
+        <paper-progress id="progress"></paper-progress>
+      </div>
+
+      <div id="right">
+        <!-- Duration -->
+        <div id="duration" class="fit" hidden$="{{ ended }}">
+          <span class="fit">{{ convertSecToMin(duration) }}</span>
+        </div>
+
+        <!-- Icon -->
+        <iron-icon id="replay" class="fit" icon="av:replay" hidden$="{{ !ended }}"></iron-icon>
+      </div>
+
+    </div>
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'flat-audio-player',
+
+    //
+    // Define public properties
+
+    properties: {
+      src: String,
+      title: {
+        type: String,
+        value: 'Click to play this audio file'
+      },
+      color: {
+        type: String,
+        value: 'blueviolet'
+      }
+    },
+
+
+    //
+    // Register event listeners
+
+    listeners: {
+      'audio.canplay' : 'onCanPlay',
+      'audio.playing' : 'onPlaying',
+      'audio.pause'   : 'onPause',
+      'audio.ended'   : 'onEnd',
+      'audio.error'   : 'onError'
+    },
+
+
+    //
+    // When element is created
+
+    ready: function() {
+
+      var progress,
+          player = this;
+
+      //
+      // create Player defaults
+
+      player.canBePlayed = false;
+      player.isPlaying = false;
+      player.ended = false;
+      player.duration = 0;
+      player.currentTime = 0;
+      player.icon = '';
+
+
+      //
+      // Apply color to elements
+
+      player.querySelector('paper-progress #activeProgress.paper-progress').style.backgroundColor = player.color;
+      player.$.left.style.backgroundColor = player.color;
+      player.$.title.style.color = player.color;
+      player.$.duration.style.color = player.color;
+      player.$.replay.style.color = player.color;
+
+
+      //
+      // Progress bar
+
+      progress = player.$.progress;
+      progress.max = 0;
+      progress.value = 0;
+    },
+
+
+    // Play/Pause controls
+
+    playPause: function(e){
+      e.preventDefault();
+      var player = this;
+
+      if ( player.canBePlayed ) {
+        return player.isPlaying ? player.$.audio.pause() : player.$.audio.play();
+      }
+    },
+
+
+    // when audio file can be played in user's browser
+
+    onCanPlay: function() {
+      var player = this;
+      player.canBePlayed = true;
+      player.icon = 'av:album';
+      player.duration = player.$.audio.duration;
+      player.$.progress.max = player.duration * 1000;
+    },
+
+
+    // when Player starts playing
+
+    onPlaying: function() {
+      var player = this;
+      player.ended = false;
+      player.isPlaying = true;
+
+      (function startProgressTimer(){
+        var timer = this;
+        if (timer.sliderUpdateInterval) { clearInterval(timer.sliderUpdateInterval); }
+        timer.sliderUpdateInterval = setInterval(function(){
+          if ( player.isPlaying ) {
+            player.$.progress.value = player.$.audio.currentTime * 1000;
+            player.currentTime = player.$.audio.currentTime;
+          } else {
+            clearInterval(timer.sliderUpdateInterval);
+          }
+        }, 120);
+      })();
+    },
+
+
+    // when Player is paused
+
+    onPause: function() {
+      var player = this;
+      player.isPlaying = false;
+      player.$.progress.value = player.currentTime * 1000;
+    },
+
+
+    // when Player ended playing an audio file
+
+    onEnd: function() {
+      var player = this;
+      player.ended = true;
+      player.isPlaying = false;
+      player.currentTime = 0;
+    },
+
+
+    // on file load error
+
+    onError: function() {
+      var player = this;
+      player.classList.add('cantplay');
+      player.title = 'Sorry, can\'t load track: ' + player.title;
+      player.icon = 'av:not-interested';
+    },
+
+
+    // on mouseenter
+
+    onMouseenter: function() {
+      var player = this;
+
+      if (player.canBePlayed) {
+        player.classList.add('hovered');
+
+        if (!player.isPlaying) {
+          player.icon = 'av:play-circle-outline';
+        }
+      }
+    },
+
+    // on mouseleave
+
+    onMouseleave: function() {
+      var player = this;
+      player.classList.remove('hovered');
+
+      if (player.canBePlayed) {
+        if (!player.isPlaying) {
+          player.icon = 'av:album';
+        }
+      }
+    },
+
+    // to convert seconds to 'm:ss' format
+
+    convertSecToMin: function(seconds){
+      if (seconds === 0) {
+        return '';
+      }
+      var minutes = Math.floor(seconds / 60);
+      var secondsToCalc = Math.floor(seconds % 60) + '';
+      return minutes + ':' + (secondsToCalc.length < 2 ? '0' + secondsToCalc : secondsToCalc);
+    }
+  });
+
+</script>
