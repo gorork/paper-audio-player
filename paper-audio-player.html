@@ -9,11 +9,11 @@ An element providing a solution to no problem in particular.
 
 Example:
 
-    <flat-audio-player></flat-audio-player>
+    <paper-audio-player></paper-audio-player>
 
 @demo
 -->
-<dom-module id="flat-audio-player">
+<dom-module id="paper-audio-player">
 
   <style>
     :host {
@@ -153,7 +153,6 @@ Example:
         <!-- Icon -->
         <iron-icon id="replay" class="fit" icon="av:replay" hidden$="{{ !ended }}"></iron-icon>
       </div>
-
     </div>
   </template>
 
@@ -163,7 +162,7 @@ Example:
 
   Polymer({
 
-    is: 'flat-audio-player',
+    is: 'paper-audio-player',
 
     //
     // Define public properties

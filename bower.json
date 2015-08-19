@@ -1,22 +1,22 @@
 {
-  "name": "flat-audio-player",
+  "name": "paper-audio-player",
   "version": "0.0.1",
   "authors": [
     "Nadi Dikun <dikunn@gmail.com>"
   ],
-  "description": "A custom audio player with flat design.",
+  "description": "A custom audio player with paper material design.",
   "keywords": [
     "web-component",
     "web-components",
     "polymer",
     "audio",
     "player",
-    "flat",
+    "paper",
     "minimalistic"
   ],
-  "main": "flat-audio-player.html",
+  "main": "paper-audio-player.html",
   "license": "MIT",
-  "homepage": "http://nadikun.com/code/flat-audio-player/",
+  "homepage": "http://nadikun.com/code/paper-audio-player/",
   "ignore": [
     "/.*",
     "/test/",
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
-    "web-component-tester": "*"
+    "web-component-tester": "*",
+    "normalize.css": "~3.0.3"
   }
 }

@@ -1,12 +1,14 @@
-# flat-audio-player
+# paper-audio-player
 
-A custom audio player with flat and clean design.
+A custom audio player with material paper style and clean design.
 
-Here is an example of code to add a Flat-Audio-Player element to your page:
+Here is an example of code to add a Paper-Audio-Player element to your page:
 
-`<flat-audio-player src="track.mp3"
+```
+<paper-audio-player src="track.mp3"
                     title="STING - Desert Rose"
-                    color="#"></flat-audio-player>`
+                    color="#"></paper-audio-player>
+                    ```
 
 **Title** and **color** attributes are optional.
 
