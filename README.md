@@ -2,13 +2,19 @@
 
 A custom audio player with material paper style and clean design.
 
+![Paper-audio-player example](http://nadikun.com/code/paper-audio-player/demo/paper-audio-player.jpg)
+
+## Live demo
+
+Check the Player live [here](http://nadikun.com/code/paper-audio-player/demo).
+
+## Element usage example
+
 Here is an example of code to add a Paper-Audio-Player element to your page:
 
-```
-<paper-audio-player src="track.mp3"
-                    title="STING - Desert Rose"
-                    color="#"></paper-audio-player>
-                    ```
+
+    <paper-audio-player src="track.mp3" title="STING - Desert Rose" color="#"></paper-audio-player>
+
 
 **Title** and **color** attributes are optional.
 
@@ -28,6 +34,3 @@ Then, go ahead and download the player's dependencies:
     bower install
 
 
-## Demo
-
-To be added soon.
