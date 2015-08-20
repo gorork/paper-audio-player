@@ -1,0 +1,78 @@
+/* Styling demo page */
+
+.row,
+.col {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.row {
+  width: 100%;
+  height: 185px;
+  position: relative;
+}
+
+.row.image {
+  height: 400px;
+}
+
+.row p,
+.row h1 {
+  position: absolute;
+}
+
+.row:last-child {
+  border-top: 1px dotted lightgrey;
+}
+
+h1, p {
+  font-family: 'Roboto Mono', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  text-align: center;
+  width: 80%;
+}
+
+h1 {
+  font-size: 25px;
+  color: #fff;
+  top: 65px;
+}
+
+p {
+  font-size: 15px;
+  color: #bbb;
+  top: 10px;
+}
+
+.image {
+  background: url("https://unsplash.com/photos/t7YycgAoVSw/download") no-repeat;
+  background-size: 100%;
+}
+
+.col {
+  width: 33%;
+}
+
+paper-audio-player {
+  width: 80%;
+}
+
+.footer {
+  font-size: 12px;
+  width: 100%;
+}
+
+a {
+  color: #F05C38;
+  text-decoration: none;
+}
+
+a:hover {
+  border-bottom: 2px solid #F05C38;
+}
+
