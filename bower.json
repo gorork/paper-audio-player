@@ -4,7 +4,7 @@
   "authors": [
     "Nadi Dikun <dikunn@gmail.com>"
   ],
-  "description": "A custom audio player with paper material design.",
+  "description": "A custom audio player with paper material style.",
   "keywords": [
     "web-component",
     "web-components",
@@ -16,7 +16,7 @@
   ],
   "main": "paper-audio-player.html",
   "license": "MIT",
-  "homepage": "http://nadikun.com/code/paper-audio-player/",
+  "homepage": "http://nadikun.com/code/paper-audio-player/demo",
   "ignore": [
     "/.*",
     "/test/",
