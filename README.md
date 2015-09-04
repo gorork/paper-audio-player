@@ -12,9 +12,9 @@ Check the Player live [here](http://nadikun.com/code/paper-audio-player/demo).
 
 Here is an example of code to add a Paper-Audio-Player element to your page:
 
-    ```html
-    <paper-audio-player src="track.mp3" title="STING - Desert Rose" color="#F05C38"></paper-audio-player>
-    ```
+```html
+<paper-audio-player src="track.mp3" title="STING - Desert Rose" color="#F05C38"></paper-audio-player>
+```
 
 **Title** and **color** attributes are optional.
 
