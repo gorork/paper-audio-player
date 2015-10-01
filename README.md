@@ -20,6 +20,10 @@ Here is an example of code to add a Paper-Audio-Player element to your page:
 
 ## Install
 
+Install the component using [NPM](https://www.npmjs.com):
+
+    npm install paper-audio-player --save
+
 Install the component using [Bower](http://bower.io/):
 
     bower install paper-audio-player --save
@@ -86,6 +90,15 @@ And you can run it via:
 Once running, you can preview your element at
 `http://localhost:8080/components/paper-audio-player/`
 
+To work with Demo page styling with Sass, install grunt and its plugins:
+
+    npm install
+
+After you made any changes, create new CSS file:
+
+    gulp
+
+This will convert Sass into CSS and run [Autoprefixer](https://autoprefixer.github.io/).
 
 ## Contributing
 

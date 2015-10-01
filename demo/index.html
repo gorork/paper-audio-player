@@ -3,19 +3,23 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <title>Paper-Audio-Player Demo</title>
+    <title>Paper Audio Player</title>
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../../paper-audio-player/paper-audio-player.html">
-
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../bower_components/normalize.css/normalize.css">
     <link rel="stylesheet" href="demo.css">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../paper-audio-player.html">
+
   </head>
   <body>
+  <div id="header">
+    <h1>Flat Audio Player</h1>
+    <h3>Open source custom audio element built with Polymer 1.0. Grab it on <a href="https://github.com/gorork/paper-audio-player" target="_blank">Github</a>!</h3>
+  </div>
+
     <!-- row -->
     <div class="row image">
-      <h1>Flat Audio Player demo</h1>
       <paper-audio-player src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"
                           color="#F05C38"
                           title="Justin Timberlake - Suit & Tie (Oscar Wylde Remix)"></paper-audio-player></div>
@@ -32,7 +36,7 @@
       <div class="col">
         <paper-audio-player src="http://nadikun.com/audio/noclique-day2.wav"
                             color="#90D9D6"
-                            title="Noclique - Day 2"></paper-audio-player></div>
+                            title="Loons - Day 2"></paper-audio-player></div>
     </div>
 
     <!-- row -->
@@ -44,7 +48,10 @@
     </div>
 
   <!-- footer -->
-  <p class="footer">&copy; 2015 Created by <a href="http://nadikun.com">Nadi Dikun</a>. Open source Polymer 1.0 element, grab it <a
-      href="https://github.com/gorork/paper-audio-player" target="_blank">here</a>.</p>
+    <div id="footer">
+      <p>&copy; 2015 Paper-Audio-Player Created by <a href="http://nadikun.com">Nadi Dikun</a>. Open source Polymer 1.0 element, grab it <a
+          href="https://github.com/gorork/paper-audio-player" target="_blank">Github</a>.</p>
+      <p>All audio tracks belong to their respective owners and were shared on this webpage under Creative Common License.</p>
+    </div>
   </body>
 </html>
