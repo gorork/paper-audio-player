@@ -1,6 +1,6 @@
 {
   "name": "paper-audio-player",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A custom audio player with material paper style and clean design.",
   "main": "paper-audio-player.html",
   "directories": {
