@@ -20,10 +20,6 @@ Here is an example of code to add a Paper-Audio-Player element to your page:
 
 ## Install
 
-Install the component using [NPM](https://www.npmjs.com):
-
-    npm install paper-audio-player --save
-
 Install the component using [Bower](http://bower.io/):
 
     bower install paper-audio-player --save
