@@ -208,11 +208,11 @@ Example:
       // Register event listeners
 
       listeners: {
-        'audio.canplay' : 'onCanPlay',
-        'audio.playing' : 'onPlaying',
-        'audio.pause'   : 'onPause',
-        'audio.ended'   : 'onEnd',
-        'audio.error'   : 'onError'
+        'audio.loadedmetadata'  : 'onCanPlay',
+        'audio.playing'         : 'onPlaying',
+        'audio.pause'           : 'onPause',
+        'audio.ended'           : 'onEnd',
+        'audio.error'           : 'onError'
       },
 
 
@@ -329,7 +329,7 @@ Example:
       onError: function() {
         var player = this;
         player.classList.add('cantplay');
-        player.title = 'Sorry, can\'t load track: ' + player.title;
+        player.title = 'Sorry, can\'t play track: ' + player.title;
         player.icon = 'av:not-interested';
       },
 
