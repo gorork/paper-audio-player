@@ -147,8 +147,8 @@ Example:
     <div id="wrapper"
          class="layout-horizontal"
          on-click="playPause"
-         on-mouseenter="onMouseenter"
-         on-mouseleave="onMouseleave">
+         on-mouseenter="_onMouseenter"
+         on-mouseleave="_onMouseleave">
 
       <div id="left" class="self-start">
         <!-- Icon -->
@@ -157,7 +157,7 @@ Example:
 
         <!-- Current time -->
         <div id="time" class="fit" hidden$="{{ !isPlaying }}">
-          <span class="fit">{{ convertSecToMin(currentTime) }}</span>
+          <span class="fit">{{ _convertSecToMin(currentTime) }}</span>
         </div>
       </div>
 
@@ -175,7 +175,7 @@ Example:
       <div id="right" class="self-end">
         <!-- Duration -->
         <div id="duration" class="fit" hidden$="{{ ended }}">
-          <span class="fit">{{ convertSecToMin(duration) }}</span>
+          <span class="fit">{{ _convertSecToMin(duration) }}</span>
         </div>
 
         <!-- Icon -->
@@ -215,11 +215,11 @@ Example:
       // Register event listeners
 
       listeners: {
-        'audio.loadedmetadata'  : 'onCanPlay',
-        'audio.playing'         : 'onPlaying',
-        'audio.pause'           : 'onPause',
-        'audio.ended'           : 'onEnd',
-        'audio.error'           : 'onError'
+        'audio.loadedmetadata'  : '_onCanPlay',
+        'audio.playing'         : '_onPlaying',
+        'audio.pause'           : '_onPause',
+        'audio.ended'           : '_onEnd',
+        'audio.error'           : '_onError'
       },
 
 
@@ -275,7 +275,7 @@ Example:
 
       // when audio file can be played in user's browser
 
-      onCanPlay: function() {
+      _onCanPlay: function() {
         var player = this;
         player.canBePlayed = true;
         player.icon = 'av:album';
@@ -289,17 +289,17 @@ Example:
 
       // when Player starts playing
 
-      onPlaying: function() {
+      _onPlaying: function() {
         var player = this;
         player.ended = false;
         player.isPlaying = true;
-        player.startProgressTimer();
+        player._startProgressTimer();
       },
 
 
       // starts Timer
 
-      startProgressTimer: function() {
+      _startProgressTimer: function() {
         var player = this;
         player.timer = {};
 
@@ -317,7 +317,7 @@ Example:
 
       // when Player is paused
 
-      onPause: function() {
+      _onPause: function() {
         var player = this;
         player.isPlaying = false;
         player.$.progress.value = player.currentTime * 1000;
@@ -326,7 +326,7 @@ Example:
 
       // when Player ended playing an audio file
 
-      onEnd: function() {
+      _onEnd: function() {
         var player = this;
         player.ended = true;
         player.isPlaying = false;
@@ -336,7 +336,7 @@ Example:
 
       // on file load error
 
-      onError: function() {
+      _onError: function() {
         var player = this;
         player.classList.add('cantplay');
         player.title = 'Sorry, can\'t play track: ' + player.title;
@@ -346,7 +346,7 @@ Example:
 
       // on mouseenter
 
-      onMouseenter: function() {
+      _onMouseenter: function() {
         var player = this;
 
         if (player.canBePlayed) {
@@ -360,7 +360,7 @@ Example:
 
       // on mouseleave
 
-      onMouseleave: function() {
+      _onMouseleave: function() {
         var player = this;
         player.classList.remove('hovered');
 
@@ -373,7 +373,7 @@ Example:
 
       // to convert seconds to 'm:ss' format
 
-      convertSecToMin: function(seconds){
+      _convertSecToMin: function(seconds){
         if (seconds === 0) {
           return '';
         }
