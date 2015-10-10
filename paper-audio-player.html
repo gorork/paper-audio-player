@@ -192,7 +192,10 @@ Example:
       // Define public properties
 
       properties: {
-        src: String,
+        src: {
+          type: String,
+          observer: "_srcChanged"
+        },
         title: {
           type: String,
           value: 'Click to play this audio file'
@@ -200,6 +203,10 @@ Example:
         color: {
           type: String,
           value: 'blueviolet'
+        },
+        autoPlay: {
+          type: Boolean,
+          value: false
         }
       },
 
@@ -274,6 +281,9 @@ Example:
         player.icon = 'av:album';
         player.duration = player.$.audio.duration;
         player.$.progress.max = player.duration * 1000;
+        if (player.autoPlay == true) {
+          player.$.audio.play();
+        }
       },
 
 
@@ -370,7 +380,20 @@ Example:
         var minutes = Math.floor(seconds / 60);
         var secondsToCalc = Math.floor(seconds % 60) + '';
         return minutes + ':' + (secondsToCalc.length < 2 ? '0' + secondsToCalc : secondsToCalc);
-      }
+      },
+
+      //
+      // When src is changed, pause the song
+
+      _srcChanged: function(oldValue, newValue) {
+        var player = this;
+
+        if (player.isPlaying == true) {
+            player.$.audio.play();
+            player.$.audio.pause();
+        }
+       }
+
     });
   </script>
 </dom-module>
