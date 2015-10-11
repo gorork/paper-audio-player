@@ -9,7 +9,7 @@ A custom audio player with material paper style and clean design.
 
 Example:
 
-    <paper-audio-player></paper-audio-player>
+    <paper-audio-player src="audio.mp3"></paper-audio-player>
 
 @demo
 -->
@@ -68,6 +68,7 @@ Example:
       }
 
       #title {
+        pointer-events: none;
         z-index: 2;
         font-size: 15px;
       }
@@ -146,11 +147,13 @@ Example:
 
     <div id="wrapper"
          class="layout-horizontal"
-         on-click="playPause"
          on-mouseenter="_onMouseenter"
          on-mouseleave="_onMouseleave">
 
-      <div id="left" class="self-start">
+      <div id="left"
+           class="self-start"
+           on-click="playPause">
+
         <!-- Icon -->
         <iron-icon id="icon" class="fit" icon="{{ icon }}" hidden$="{{ isPlaying }}"></iron-icon>
         <iron-icon id="pause" class="fit" icon="av:pause-circle-outline" hidden$="{{ !isPlaying }}"></iron-icon>
@@ -166,11 +169,18 @@ Example:
         <div id="title" class="fit">{{ title }}</div>
 
         <!-- Audio HTML5 element -->
-        <audio id="audio" src="{{ src }}"></audio>
+        <audio id="audio"
+               src="{{ src }}"
+               current-time="{{ currentTime }}"></audio>
 
         <!-- Paper progress bar -->
-        <paper-progress id="progress"></paper-progress>
-      </div>
+        <paper-progress id="progress"
+                        step=0.001
+                        value="[[ currentTime ]]"
+                        max="[[ duration ]]"
+                        min=0
+                        on-down="_onDown"></paper-progress>
+    </div>
 
       <div id="right" class="self-end">
         <!-- Duration -->
@@ -179,7 +189,7 @@ Example:
         </div>
 
         <!-- Icon -->
-        <iron-icon id="replay" class="fit" icon="av:replay" hidden$="{{ !ended }}"></iron-icon>
+        <iron-icon id="replay" class="fit" icon="av:replay" hidden$="{{ !ended }}" on-click="playPause"></iron-icon>
       </div>
     </div>
   </template>
@@ -207,6 +217,15 @@ Example:
         autoPlay: {
           type: Boolean,
           value: false
+        },
+        currentTime: {
+          type: Number,
+          value: 0,
+          notify: true
+        },
+        duration: {
+          type: Number,
+          value: 0
         }
       },
 
@@ -227,9 +246,7 @@ Example:
       // When element is created
 
       ready: function() {
-
-        var progress,
-            player = this;
+        var player = this;
 
         //
         // create Player defaults
@@ -237,8 +254,6 @@ Example:
         player.canBePlayed = false;
         player.isPlaying = false;
         player.ended = false;
-        player.duration = 0;
-        player.currentTime = 0;
         player.icon = '';
 
 
@@ -250,14 +265,6 @@ Example:
         player.$.title.style.color = player.color;
         player.$.duration.style.color = player.color;
         player.$.replay.style.color = player.color;
-
-
-        //
-        // Progress bar
-
-        progress = player.$.progress;
-        progress.max = 0;
-        progress.value = 0;
       },
 
 
@@ -280,7 +287,6 @@ Example:
         player.canBePlayed = true;
         player.icon = 'av:album';
         player.duration = player.$.audio.duration;
-        player.$.progress.max = player.duration * 1000;
         if (player.autoPlay) {
           player.$.audio.play();
         }
@@ -306,7 +312,7 @@ Example:
         if (player.timer.sliderUpdateInterval) { clearInterval(player.timer.sliderUpdateInterval); }
         player.timer.sliderUpdateInterval = setInterval( function(){
           if ( player.isPlaying ) {
-            player.$.progress.value = player.$.audio.currentTime * 1000;
+            player.$.progress.value = player.$.audio.currentTime;
             player.currentTime = player.$.audio.currentTime;
           } else {
             clearInterval(player.timer.sliderUpdateInterval);
@@ -320,7 +326,6 @@ Example:
       _onPause: function() {
         var player = this;
         player.isPlaying = false;
-        player.$.progress.value = player.currentTime * 1000;
       },
 
 
@@ -380,6 +385,16 @@ Example:
         var minutes = Math.floor(seconds / 60);
         var secondsToCalc = Math.floor(seconds % 60) + '';
         return minutes + ':' + (secondsToCalc.length < 2 ? '0' + secondsToCalc : secondsToCalc);
+      },
+
+
+      // to change the time on the track
+
+      _onDown: function(e) {
+        var player = this,
+        x = event.detail.sourceEvent.x - this.offsetLeft - 50,
+        r = (x / player.$["progress"].offsetWidth) * player.duration;
+        player.currentTime = r;
       },
 
       //
