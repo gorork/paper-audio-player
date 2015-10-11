@@ -281,7 +281,7 @@ Example:
         player.icon = 'av:album';
         player.duration = player.$.audio.duration;
         player.$.progress.max = player.duration * 1000;
-        if (player.autoPlay == true) {
+        if (player.autoPlay) {
           player.$.audio.play();
         }
       },
@@ -389,7 +389,7 @@ Example:
       _srcChanged: function(oldValue, newValue) {
         var player = this;
 
-        if (player.isPlaying == true) {
+        if (player.isPlaying) {
           player.$.audio.pause();
           player.$.audio.play();
         }
