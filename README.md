@@ -65,11 +65,12 @@ Then, go ahead and download the player's dependencies:
 
 ## Customization
 
-Attribute | Options                                 | Description
----       | ---                                     | ---
-`src`     | *string*                                | The URL path to the audio file
-`title`   | *string*                                | Customize the track name
-`color`   | *string*                                | Customize the accent color that will be used
+Attribute     | Options                                 | Description
+---           | ---                                     | ---
+`src`         | *string*                                | The URL path to the audio file
+`title`       | *string*                                | Customize the track name
+`color`       | *string*                                | Customize the accent color that will be used
+`auto-play`   | *boolean*                               | Will start playing the audio file automatically
 
 ## Development
 
