@@ -13,7 +13,17 @@ Example:
 
 ### Styling the player:
 
-To change the active progress bar color, can be change with attribute 'color' too:
+This player has an accent color, and you have two option to modify it:
+
+- **Option 1**: Using the *color property* on element. This one is handy if you need to modify the color dynamically.
+
+
+    <paper-audio-player color="#F05C38" src="audio.mp3"></paper-audio-player>
+
+
+- **Option 2**: Using the *custom CSS property*:
+
+
 
     paper-audio-player {
        --paper-audio-player-color: #e91e63;
@@ -411,17 +421,18 @@ Custom property                             | Description                       
         }
       },
 
-       //
-       // Function to change color dynamically
+      //
+      // If color property is changed,
+      // update all the nodes with the new accent color
 
-       _changeColor: function(newValue) {
-         var player = this;
-         player.querySelector('paper-progress #primaryProgress.paper-progress').style.backgroundColor = player.color;
-         player.$.left.style.backgroundColor = player.color;
-         player.$.title.style.color = player.color;
-         player.$.duration.style.color = player.color;
-         player.$.replay.style.color = player.color;
-       }
+      _changeColor: function(newValue) {
+        var player = this;
+        player.querySelector('paper-progress #primaryProgress.paper-progress').style.backgroundColor = newValue;
+        player.$.left.style.backgroundColor = newValue;
+        player.$.title.style.color = newValue;
+        player.$.duration.style.color = newValue;
+        player.$.replay.style.color = newValue;
+      }
     });
   </script>
 </dom-module>
