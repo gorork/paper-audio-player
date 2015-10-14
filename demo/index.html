@@ -10,7 +10,19 @@
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../paper-audio-player.html">
+    <style is="custom-style">
+      paper-audio-player.orange {
+        --paper-audio-player-color: #F05C38;
+      }
 
+      paper-audio-player.blue  {
+        --paper-audio-player-color: #90D9D6;
+      }
+
+      paper-audio-player.broken {
+        --paper-audio-player-color: #43BBF9;
+      }
+    </style>
   </head>
   <body>
   <div id="header">
@@ -20,31 +32,31 @@
 
     <!-- row -->
     <div class="row image">
-      <paper-audio-player src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"
-                          color="#F05C38"
+      <paper-audio-player class="orange"
+                          src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"
                           title="Justin Timberlake - Suit & Tie (Oscar Wylde Remix)"></paper-audio-player></div>
     <!-- row -->
     <div class="row">
       <div class="col">
-        <paper-audio-player src="http://nadikun.com/audio/pink-shades-o-pnr.mp3"
-                            color="#90D9D6"
+        <paper-audio-player class="blue"
+                            src="http://nadikun.com/audio/pink-shades-o-pnr.mp3"
                             title="Pink Shades - O+PNR"></paper-audio-player></div>
       <div class="col">
-        <paper-audio-player src="http://nadikun.com/audio/s-e-p-blue-monk.wav"
-                            color="#90D9D6"
+        <paper-audio-player class="blue"
+                            src="http://nadikun.com/audio/s-e-p-blue-monk.wav"
                             title="s-e-P - Blue Monk"></paper-audio-player></div>
       <div class="col">
-        <paper-audio-player src="http://nadikun.com/audio/noclique-day2.wav"
-                            color="#90D9D6"
+        <paper-audio-player class="blue"
+                            src="http://nadikun.com/audio/noclique-day2.wav"
                             title="Loons - Day 2"></paper-audio-player></div>
     </div>
 
     <!-- row -->
     <div class="row">
       <p>When audio file can't be played by browser or file path is invalid</p>
-      <paper-audio-player src="http://nadikun.com/audio/somefile.m3"
-                          title="Sting - Desert Rose"
-                          color="#43BBF9"></paper-audio-player>
+      <paper-audio-player class="broken"
+                          src="http://nadikun.com/audio/somefile.m3"
+                          title="Sting - Desert Rose"></paper-audio-player>
     </div>
 
   <!-- footer -->

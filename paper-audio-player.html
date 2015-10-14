@@ -9,9 +9,24 @@ A custom audio player with material paper style and clean design.
 
 Example:
 
-    <paper-audio-player></paper-audio-player>
+    <paper-audio-player src="audio.mp3"></paper-audio-player>
 
-@demo
+### Styling the player:
+
+To change the active progress bar color, can be change with attribute 'color' too:
+
+    paper-audio-player {
+       --paper-audio-player-color: #e91e63;
+    }
+
+The following mixins are available for styling:
+
+Custom property                             | Description                                 | Default
+--------------------------------------------|---------------------------------------------|----------
+--paper-audio-player-color                  | Color of the element                        | blueviolet
+
+@element paper-audio-player
+@demo demo/index.html
 -->
 <dom-module id="paper-audio-player">
   <template>
@@ -38,6 +53,9 @@ Example:
         width: 50px;
         position: relative;
       }
+      #left {
+        background-color:  var(--paper-audio-player-color, blueviolet);
+      }
 
       #right {
         background-color: rgba(255,255,255,.75);
@@ -61,15 +79,24 @@ Example:
         font-size: 11px;
       }
 
+      #duration {
+        color: var(--paper-audio-player-color, blueviolet);
+      }
+
       #icon,
       #pause,
       #replay {
         margin: auto;
       }
 
+      #replay {
+        color: var(--paper-audio-player-color, blueviolet);
+      }
+
       #title {
         z-index: 2;
         font-size: 15px;
+        color: var(--paper-audio-player-color, blueviolet);
       }
 
       #pause {
@@ -79,7 +106,7 @@ Example:
       paper-progress {
         position: relative;
         width: 100%;
-        --paper-progress-active-color: blueviolet;
+        --paper-progress-active-color: var(--paper-audio-player-color, blueviolet);
         --paper-progress-height: 50px;
         --paper-progress-container-color: rgba(255,255,255,.75);
       }
@@ -201,8 +228,8 @@ Example:
           value: 'Click to play this audio file'
         },
         color: {
-          type: String,
-          value: 'blueviolet'
+          type :String,
+          observer: '_changeColor'
         },
         autoPlay: {
           type: Boolean,
@@ -240,17 +267,6 @@ Example:
         player.duration = 0;
         player.currentTime = 0;
         player.icon = '';
-
-
-        //
-        // Apply color to elements
-
-        player.querySelector('paper-progress #primaryProgress.paper-progress').style.backgroundColor = player.color;
-        player.$.left.style.backgroundColor = player.color;
-        player.$.title.style.color = player.color;
-        player.$.duration.style.color = player.color;
-        player.$.replay.style.color = player.color;
-
 
         //
         // Progress bar
@@ -393,8 +409,19 @@ Example:
           player.$.audio.pause();
           player.$.audio.play();
         }
-       }
+      },
 
+       //
+       // Function to change color dynamically
+
+       _changeColor: function(newValue) {
+         var player = this;
+         player.querySelector('paper-progress #primaryProgress.paper-progress').style.backgroundColor = player.color;
+         player.$.left.style.backgroundColor = player.color;
+         player.$.title.style.color = player.color;
+         player.$.duration.style.color = player.color;
+         player.$.replay.style.color = player.color;
+       }
     });
   </script>
 </dom-module>
