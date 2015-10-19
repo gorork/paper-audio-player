@@ -171,7 +171,7 @@ Example:
         <!-- Audio HTML5 element -->
         <audio id="audio"
                src="{{ src }}"
-               current-time="{{ currentTime }}"></audio>
+               current-time="{{ currentTime::timeupdate }}"></audio>
 
         <!-- Paper progress bar -->
         <paper-progress id="progress"
@@ -312,7 +312,6 @@ Example:
         if (player.timer.sliderUpdateInterval) { clearInterval(player.timer.sliderUpdateInterval); }
         player.timer.sliderUpdateInterval = setInterval( function(){
           if ( player.isPlaying ) {
-            player.$.progress.value = player.$.audio.currentTime;
             player.currentTime = player.$.audio.currentTime;
           } else {
             clearInterval(player.timer.sliderUpdateInterval);
@@ -391,9 +390,12 @@ Example:
       // to change the time on the track
 
       _onDown: function(e) {
-        var player = this,
-        x = event.detail.sourceEvent.x - this.offsetLeft - 50,
-        r = (x / player.$["progress"].offsetWidth) * player.duration;
+        e.preventDefault();
+        var x, r,
+            player = this;
+
+        x = event.detail.sourceEvent.x - player.offsetLeft - player.$.right.offsetWidth;
+        r = (x / player.$.progress.offsetWidth) * player.duration;
         player.currentTime = r;
       },
 
