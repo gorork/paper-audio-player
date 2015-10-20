@@ -67,6 +67,10 @@ Example:
         margin: auto;
       }
 
+      #replay {
+        opacity: 0;
+      }
+
       #title {
         pointer-events: none;
         z-index: 2;
@@ -87,15 +91,23 @@ Example:
 
       /* On hover */
 
-      :host(.hovered) #pause {
+      :host(.left-hovered) #pause {
         opacity: 1;
       }
 
-      :host(.hovered) #time {
+      :host(.left-hovered) #time {
         opacity: 0;
       }
 
-      :host(.hovered) #title {
+      :host(.right-hovered) #replay {
+        opacity: 1;
+      }
+
+      :host(.right-hovered) #duration {
+        opacity: 0;
+      }
+
+      :host(.progress-hovered) #title {
         color: #333 !important;
       }
 
@@ -145,14 +157,13 @@ Example:
       }
     </style>
 
-    <div id="wrapper"
-         class="layout-horizontal"
-         on-mouseenter="_onMouseenter"
-         on-mouseleave="_onMouseleave">
+    <div id="wrapper" class="layout-horizontal">
 
       <div id="left"
            class="self-start"
-           on-click="playPause">
+           on-click="playPause"
+           on-mouseenter="_onLeftMouseenter"
+           on-mouseleave="_onLeftMouseleave">
 
         <!-- Icon -->
         <iron-icon id="icon" class="fit" icon="{{ icon }}" hidden$="{{ isPlaying }}"></iron-icon>
@@ -182,14 +193,18 @@ Example:
                         on-down="_onDown"></paper-progress>
     </div>
 
-      <div id="right" class="self-end">
+      <div id="right"
+           class="self-end"
+           on-mouseenter="_onRightMouseenter"
+           on-mouseleave="_onRightMouseleave">
+
         <!-- Duration -->
         <div id="duration" class="fit" hidden$="{{ ended }}">
           <span class="fit">{{ _convertSecToMin(duration) }}</span>
         </div>
 
         <!-- Icon -->
-        <iron-icon id="replay" class="fit" icon="av:replay" hidden$="{{ !ended }}" on-click="playPause"></iron-icon>
+        <iron-icon id="replay" class="fit" icon="av:replay" on-click="playPause"></iron-icon>
       </div>
     </div>
   </template>
@@ -348,13 +363,13 @@ Example:
       },
 
 
-      // on mouseenter
+      // on #Left section mouseenter
 
-      _onMouseenter: function() {
+      _onLeftMouseenter: function() {
         var player = this;
 
         if (player.canBePlayed) {
-          player.classList.add('hovered');
+          player.classList.add('left-hovered');
 
           if (!player.isPlaying) {
             player.icon = 'av:play-circle-outline';
@@ -362,17 +377,34 @@ Example:
         }
       },
 
-      // on mouseleave
+      // on #Left section mouseleave
 
-      _onMouseleave: function() {
+      _onLeftMouseleave: function() {
         var player = this;
-        player.classList.remove('hovered');
+        player.classList.remove('left-hovered');
 
         if (player.canBePlayed) {
           if (!player.isPlaying) {
             player.icon = 'av:album';
           }
         }
+      },
+
+      // on #Right section mouseenter
+
+      _onRightMouseenter: function() {
+        var player = this;
+
+        if (player.canBePlayed) {
+          player.classList.add('right-hovered');
+        }
+      },
+
+      // on #Right section mouseleave
+
+      _onRightMouseleave: function() {
+        var player = this;
+        player.classList.remove('right-hovered');
       },
 
       // to convert seconds to 'm:ss' format
@@ -391,12 +423,11 @@ Example:
 
       _onDown: function(e) {
         e.preventDefault();
-        var x, r,
+        var x,
             player = this;
 
-        x = event.detail.sourceEvent.x - player.offsetLeft - player.$.right.offsetWidth;
-        r = (x / player.$.progress.offsetWidth) * player.duration;
-        player.currentTime = r;
+        x = e.detail.x - player.offsetLeft - player.$.left.offsetWidth;
+        player.currentTime = (x / player.$.progress.offsetWidth) * player.duration;
       },
 
       //
