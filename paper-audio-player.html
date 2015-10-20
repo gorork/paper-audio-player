@@ -68,6 +68,7 @@ Example:
         margin: auto;
       }
 
+      #icon,
       #replay {
         opacity: 0;
       }
@@ -76,10 +77,6 @@ Example:
         pointer-events: none;
         z-index: 2;
         font-size: 15px;
-      }
-
-      #icon {
-        opacity: 0;
       }
 
       paper-progress {
@@ -172,7 +169,7 @@ Example:
 
         <!-- Icon -->
         <iron-icon id="icon" class="fit" icon="{{ icon }}" hidden$="{{ !isPlaying }}"></iron-icon>
-        <iron-icon id="play" class="fit" hidden$="{{ isPlaying }}"></iron-icon> <!-- icon="av:play-circle-outline" -->
+        <iron-icon id="play" class="fit" hidden$="{{ isPlaying }}"></iron-icon>
 
         <!-- Current time -->
         <div id="time" class="fit" hidden$="{{ !isPlaying }}">
