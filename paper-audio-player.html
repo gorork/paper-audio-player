@@ -11,7 +11,32 @@ Example:
 
     <paper-audio-player src="audio.mp3"></paper-audio-player>
 
-@demo
+### Styling the player:
+
+This player has an accent color, and you have two option to modify it:
+
+- **Option 1**: Using the *color property* on element. This one is handy if you need to modify the color dynamically.
+
+
+    <paper-audio-player color="#F05C38" src="audio.mp3"></paper-audio-player>
+
+
+- **Option 2**: Using the *custom CSS property*:
+
+
+
+    paper-audio-player {
+       --paper-audio-player-color: #e91e63;
+    }
+
+The following mixins are available for styling:
+
+Custom property                             | Description                                 | Default
+--------------------------------------------|---------------------------------------------|----------
+--paper-audio-player-color                  | Color of the element                        | blueviolet
+
+@element paper-audio-player
+@demo demo/index.html
 -->
 <dom-module id="paper-audio-player">
   <template>
@@ -39,6 +64,9 @@ Example:
         width: 50px;
         position: relative;
       }
+      #left {
+        background-color:  var(--paper-audio-player-color, blueviolet);
+      }
 
       #right {
         background-color: rgba(255,255,255,.75);
@@ -62,10 +90,18 @@ Example:
         font-size: 11px;
       }
 
+      #duration {
+        color: var(--paper-audio-player-color, blueviolet);
+      }
+
       #icon,
       #play,
       #replay {
         margin: auto;
+      }
+
+      #replay {
+        color: var(--paper-audio-player-color, blueviolet);
       }
 
       #icon,
@@ -77,12 +113,13 @@ Example:
         pointer-events: none;
         z-index: 2;
         font-size: 15px;
+        color: var(--paper-audio-player-color, blueviolet);
       }
 
       paper-progress {
         position: relative;
         width: 100%;
-        --paper-progress-active-color: blueviolet;
+        --paper-progress-active-color: var(--paper-audio-player-color, blueviolet);
         --paper-progress-height: 50px;
         --paper-progress-container-color: rgba(255,255,255,.75);
       }
@@ -230,7 +267,7 @@ Example:
         },
         color: {
           type: String,
-          value: 'blueviolet'
+          observer: '_changeColor'
         },
         autoPlay: {
           type: Boolean,
@@ -274,15 +311,6 @@ Example:
         player.ended = false;
         player.icon = '';
 
-
-        //
-        // Apply color to elements
-
-        player.querySelector('paper-progress #primaryProgress.paper-progress').style.backgroundColor = player.color;
-        player.$.left.style.backgroundColor = player.color;
-        player.$.title.style.color = player.color;
-        player.$.duration.style.color = player.color;
-        player.$.replay.style.color = player.color;
       },
 
 
@@ -411,8 +439,20 @@ Example:
           player.$.audio.pause();
           player.$.audio.play();
         }
-       }
+      },
 
+      //
+      // If color property is changed,
+      // update all the nodes with the new accent color
+
+      _changeColor: function(newValue) {
+        var player = this;
+        player.querySelector('paper-progress #primaryProgress.paper-progress').style.backgroundColor = newValue;
+        player.$.left.style.backgroundColor = newValue;
+        player.$.title.style.color = newValue;
+        player.$.duration.style.color = newValue;
+        player.$.replay.style.color = newValue;
+      }
     });
   </script>
 </dom-module>
