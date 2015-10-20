@@ -46,7 +46,7 @@ Example:
 
       #time,
       #icon,
-      #pause {
+      #play {
         color: #fff;
       }
 
@@ -63,7 +63,7 @@ Example:
       }
 
       #icon,
-      #pause,
+      #play,
       #replay {
         margin: auto;
       }
@@ -78,7 +78,7 @@ Example:
         font-size: 15px;
       }
 
-      #pause {
+      #icon {
         opacity: 0;
       }
 
@@ -92,23 +92,17 @@ Example:
 
       /* On hover */
 
-      :host(.left-hovered) #pause {
+      #left:hover #icon,
+      :host:not(.cantplay) #right:hover #replay {
         opacity: 1;
       }
 
-      :host(.left-hovered) #time {
+      #left:hover #time,
+      #right:hover #duration {
         opacity: 0;
       }
 
-      :host(.right-hovered) #replay {
-        opacity: 1;
-      }
-
-      :host(.right-hovered) #duration {
-        opacity: 0;
-      }
-
-      :host(.progress-hovered) #title {
+      :host:not(.cantplay) #center:hover #title{
         color: #333 !important;
       }
 
@@ -120,6 +114,14 @@ Example:
 
       :host(.cantplay) #wrapper {
         cursor: default;
+      }
+
+      :host(.cantplay) #play {
+        opacity: 0;
+      }
+
+      :host(.cantplay) #icon {
+        opacity: 1;
       }
 
       /* Flexbox Helpers */
@@ -169,8 +171,8 @@ Example:
            on-mouseleave="_onLeftMouseleave">
 
         <!-- Icon -->
-        <iron-icon id="icon" class="fit" icon="{{ icon }}" hidden$="{{ isPlaying }}"></iron-icon>
-        <iron-icon id="pause" class="fit" icon="av:pause-circle-outline" hidden$="{{ !isPlaying }}"></iron-icon>
+        <iron-icon id="icon" class="fit" icon="{{ icon }}" hidden$="{{ !isPlaying }}"></iron-icon>
+        <iron-icon id="play" class="fit" hidden$="{{ isPlaying }}"></iron-icon> <!-- icon="av:play-circle-outline" -->
 
         <!-- Current time -->
         <div id="time" class="fit" hidden$="{{ !isPlaying }}">
@@ -178,7 +180,7 @@ Example:
         </div>
       </div>
 
-      <div class="flex">
+      <div id="center" class="flex">
         <!-- Title -->
         <div id="title" class="fit">{{ title }}</div>
 
@@ -192,10 +194,11 @@ Example:
                         max="[[ duration ]]"
                         min=0
                         on-down="_onDown"></paper-progress>
-    </div>
+      </div>
 
       <div id="right"
            class="self-end"
+           on-click="restart"
            on-mouseenter="_onRightMouseenter"
            on-mouseleave="_onRightMouseleave">
 
@@ -205,7 +208,7 @@ Example:
         </div>
 
         <!-- Icon -->
-        <iron-icon id="replay" class="fit" icon="av:replay" on-click="playPause"></iron-icon>
+        <iron-icon id="replay" class="fit" icon="av:replay"></iron-icon>
       </div>
     </div>
   </template>
@@ -296,12 +299,23 @@ Example:
       },
 
 
+      // Restart
+
+      restart: function(e){
+        e.preventDefault();
+        var player = this;
+        player.$.audio.currentTime = 0;
+        if ( !player.isPlaying ) player.$.audio.play();
+      },
+
+
       // when audio file can be played in user's browser
 
       _onCanPlay: function() {
         var player = this;
         player.canBePlayed = true;
-        player.icon = 'av:album';
+        player.icon = 'av:pause-circle-outline';
+        player.$.play.setAttribute('icon', 'av:play-circle-outline');
         player.duration = player.$.audio.duration;
         if (player.autoPlay) {
           player.$.audio.play();
@@ -361,52 +375,9 @@ Example:
         player.classList.add('cantplay');
         player.title = 'Sorry, can\'t play track: ' + player.title;
         player.icon = 'av:not-interested';
+        player.$.icon.removeAttribute('hidden');
       },
 
-
-      // on #Left section mouseenter
-
-      _onLeftMouseenter: function() {
-        var player = this;
-
-        if (player.canBePlayed) {
-          player.classList.add('left-hovered');
-
-          if (!player.isPlaying) {
-            player.icon = 'av:play-circle-outline';
-          }
-        }
-      },
-
-      // on #Left section mouseleave
-
-      _onLeftMouseleave: function() {
-        var player = this;
-        player.classList.remove('left-hovered');
-
-        if (player.canBePlayed) {
-          if (!player.isPlaying) {
-            player.icon = 'av:album';
-          }
-        }
-      },
-
-      // on #Right section mouseenter
-
-      _onRightMouseenter: function() {
-        var player = this;
-
-        if (player.canBePlayed) {
-          player.classList.add('right-hovered');
-        }
-      },
-
-      // on #Right section mouseleave
-
-      _onRightMouseleave: function() {
-        var player = this;
-        player.classList.remove('right-hovered');
-      },
 
       // to convert seconds to 'm:ss' format
 
@@ -424,11 +395,12 @@ Example:
 
       _onDown: function(e) {
         e.preventDefault();
-        var x,
+        var x, r,
             player = this;
 
         x = e.detail.x - player.offsetLeft - player.$.left.offsetWidth;
-        player.$.audio.currentTime = (x / player.$.progress.offsetWidth) * player.duration;
+        r = (x / player.$.progress.offsetWidth) * player.duration;
+        player.currentTime = player.$.audio.currentTime = r;
       },
 
       //
