@@ -183,9 +183,7 @@ Example:
         <div id="title" class="fit">{{ title }}</div>
 
         <!-- Audio HTML5 element -->
-        <audio id="audio"
-               src="{{ src }}"
-               current-time="{{ currentTime::timeupdate }}"></audio>
+        <audio id="audio" src="{{ src }}"></audio>
 
         <!-- Paper progress bar -->
         <paper-progress id="progress"
@@ -430,7 +428,7 @@ Example:
             player = this;
 
         x = e.detail.x - player.offsetLeft - player.$.left.offsetWidth;
-        player.currentTime = (x / player.$.progress.offsetWidth) * player.duration;
+        player.$.audio.currentTime = (x / player.$.progress.offsetWidth) * player.duration;
       },
 
       //
