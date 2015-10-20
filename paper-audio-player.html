@@ -163,9 +163,7 @@ Example:
 
       <div id="left"
            class="self-start"
-           on-click="playPause"
-           on-mouseenter="_onLeftMouseenter"
-           on-mouseleave="_onLeftMouseleave">
+           on-click="playPause">
 
         <!-- Icon -->
         <iron-icon id="icon" class="fit" icon="{{ icon }}" hidden$="{{ !isPlaying }}"></iron-icon>
@@ -195,9 +193,7 @@ Example:
 
       <div id="right"
            class="self-end"
-           on-click="restart"
-           on-mouseenter="_onRightMouseenter"
-           on-mouseleave="_onRightMouseleave">
+           on-click="restart">
 
         <!-- Duration -->
         <div id="duration" class="fit" hidden$="{{ ended }}">
@@ -314,9 +310,7 @@ Example:
         player.icon = 'av:pause-circle-outline';
         player.$.play.setAttribute('icon', 'av:play-circle-outline');
         player.duration = player.$.audio.duration;
-        if (player.autoPlay) {
-          player.$.audio.play();
-        }
+        if (player.autoPlay) player.$.audio.play();
       },
 
 
