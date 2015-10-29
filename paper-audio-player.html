@@ -423,8 +423,8 @@ Custom property                             | Description                       
         var x, r,
             player = this;
 
-        x = e.detail.x - player.offsetLeft - player.$.left.offsetWidth;
-        r = (x / player.$.progress.offsetWidth) * player.duration;
+        x = e.detail.x - player.$.progress.getBoundingClientRect().left;
+        r = (x / player.$.progress.getBoundingClientRect().width) * player.duration;
         player.currentTime = player.$.audio.currentTime = r;
       },
 
