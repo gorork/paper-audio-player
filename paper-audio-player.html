@@ -371,6 +371,7 @@ Custom property                             | Description                       
         var player = this;
         player.ended = false;
         player.isPlaying = true;
+        player.$.replay.style = '';       // remove Replay inline styling
         player._startProgressTimer();
       },
 
@@ -412,10 +413,7 @@ Custom property                             | Description                       
         var player = this;
         player.ended = true;
         player.isPlaying = false;
-        player.currentTime = 0;
-
-        // Remove inline styling for Secondary progress
-        player.$.progress2.style = '';
+        player.$.replay.style.opacity = 1;    // display Replay icon
       },
 
 
