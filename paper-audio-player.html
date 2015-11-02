@@ -80,7 +80,8 @@ Custom property                             | Description                       
 
       #time,
       #duration,
-      #title {
+      #title,
+      #progress2 {
         text-align: center;
         line-height: 50px;
       }
@@ -109,11 +110,26 @@ Custom property                             | Description                       
         opacity: 0;
       }
 
-      #title {
+      #title,
+      #progress2 {
         pointer-events: none;
-        z-index: 2;
         font-size: 15px;
+      }
+
+      #title {
+        z-index: 2;
         color: var(--paper-audio-player-color, blueviolet);
+      }
+
+      #progress2 {
+        width: 0;
+        z-index: 5;
+        color: #fff;
+        overflow: hidden;
+      }
+
+      #center {
+        position: relative;
       }
 
       paper-progress {
@@ -134,10 +150,6 @@ Custom property                             | Description                       
       #left:hover #time,
       #right:hover #duration {
         opacity: 0;
-      }
-
-      :host:not(.cantplay) #center:hover #title{
-        color: #333 !important;
       }
 
       #left:hover #play {
@@ -232,6 +244,11 @@ Custom property                             | Description                       
                         max="[[ duration ]]"
                         min=0
                         on-down="_onDown"></paper-progress>
+
+        <!-- Secondary white title -->
+        <div id="progress2" class="fit">
+          <div id="title2">{{ title }}</div>
+        </div>
       </div>
 
       <div id="right"
@@ -310,7 +327,6 @@ Custom property                             | Description                       
         player.isPlaying = false;
         player.ended = false;
         player.icon = '';
-
       },
 
 
@@ -344,6 +360,7 @@ Custom property                             | Description                       
         player.icon = 'av:pause-circle-outline';
         player.$.play.setAttribute('icon', 'av:play-circle-outline');
         player.duration = player.$.audio.duration;
+        player.$.title2.style.width = player.$.center.getBoundingClientRect().width + 'px'; // TODO upd on window resize
         if (player.autoPlay) player.$.audio.play();
       },
 
@@ -365,9 +382,15 @@ Custom property                             | Description                       
         player.timer = {};
 
         if (player.timer.sliderUpdateInterval) { clearInterval(player.timer.sliderUpdateInterval); }
+
         player.timer.sliderUpdateInterval = setInterval( function(){
           if ( player.isPlaying ) {
             player.currentTime = player.$.audio.currentTime;
+
+            // Update Secondary progress width to display white title
+            var x = (player.currentTime / player.duration) * player.$.progress.getBoundingClientRect().width;
+            player.$.progress2.style.width = x + 'px';
+
           } else {
             clearInterval(player.timer.sliderUpdateInterval);
           }
@@ -390,6 +413,9 @@ Custom property                             | Description                       
         player.ended = true;
         player.isPlaying = false;
         player.currentTime = 0;
+
+        // Remove inline styling for Secondary progress
+        player.$.progress2.style = '';
       },
 
 
@@ -407,9 +433,8 @@ Custom property                             | Description                       
       // to convert seconds to 'm:ss' format
 
       _convertSecToMin: function(seconds){
-        if (seconds === 0) {
-          return '';
-        }
+        if (seconds === 0) return '';
+
         var minutes = Math.floor(seconds / 60);
         var secondsToCalc = Math.floor(seconds % 60) + '';
         return minutes + ':' + (secondsToCalc.length < 2 ? '0' + secondsToCalc : secondsToCalc);
@@ -426,6 +451,9 @@ Custom property                             | Description                       
         x = e.detail.x - player.$.progress.getBoundingClientRect().left;
         r = (x / player.$.progress.getBoundingClientRect().width) * player.duration;
         player.currentTime = player.$.audio.currentTime = r;
+
+        // Update Secondary progress width to display white title
+        player.$.progress2.style.width = x + 'px';
       },
 
       //
