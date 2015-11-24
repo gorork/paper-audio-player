@@ -459,6 +459,10 @@ Custom property                             | Description                       
 
           player.$.progress.style.width = x + 'px';
           player.$.progress2.style.width = x + 'px';
+
+          if(!player.isPlaying){
+            player.$.audio.play()
+          }
         }
       },
 
