@@ -441,15 +441,18 @@ Custom property                             | Description                       
 
       _onDown: function(e) {
         e.preventDefault();
-        var x, r,
-            player = this;
+        var player = this;
 
-        x = e.detail.x - player.$.progress.getBoundingClientRect().left;
-        r = (x / player.$.progress.getBoundingClientRect().width) * player.duration;
-        player.currentTime = player.$.audio.currentTime = r;
+        if(player.canBePlayed){
+          var x, r;
 
-        // Update Secondary progress width to display white title
-        player.$.progress2.style.width = x + 'px';
+          x = e.detail.x - player.$.progress.getBoundingClientRect().left;
+          r = (x / player.$.progress.getBoundingClientRect().width) * player.duration;
+          player.currentTime = player.$.audio.currentTime = r;
+
+          // Update Secondary progress width to display white title
+          player.$.progress2.style.width = x + 'px';
+        }
       },
 
       //
