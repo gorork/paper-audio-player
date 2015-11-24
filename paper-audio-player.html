@@ -3,7 +3,9 @@
 <link rel="import" href="../paper-progress/paper-progress.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../iron-icons/av-icons.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
 
 <!--
 A custom audio player with material paper style and clean design.
@@ -46,7 +48,7 @@ Custom property                             | Description                       
 
       :host {
         display: block;
-        margin: auto;
+        margin: auto 10px;
         box-sizing: border-box;
         width: 100%;
         font-family: 'Roboto Mono', 'Helvetica Neue', Arial, sans-serif;
@@ -74,7 +76,8 @@ Custom property                             | Description                       
       }
 
       #time,
-      iron-icon {
+      paper-icon-button,
+      iron-icon{
         color: #fff;
       }
 
@@ -95,6 +98,7 @@ Custom property                             | Description                       
         color: var(--paper-audio-player-color, blueviolet);
       }
 
+      paper-icon-button,
       iron-icon {
         margin: auto;
       }
@@ -103,7 +107,8 @@ Custom property                             | Description                       
         color: var(--paper-audio-player-color, blueviolet);
       }
 
-      #replay {
+      #replay,
+      #pause {
         opacity: 0;
       }
 
@@ -123,23 +128,27 @@ Custom property                             | Description                       
         z-index: 5;
         color: #fff;
         overflow: hidden;
+        transition: linear .06s width;
       }
 
       #center {
         position: relative;
+        background: rgba(255,255,255,.75);
       }
 
-      paper-progress {
-        position: relative;
-        width: 100%;
-        --paper-progress-active-color: var(--paper-audio-player-color, blueviolet);
-        --paper-progress-height: 50px;
-        --paper-progress-container-color: rgba(255,255,255,.75);
+      #progress {
+        width: 0px;
+        transition: linear .06s width;
+        background: var(--paper-audio-player-color, blueviolet);
+      }
+
+      paper-ripple{
+        color: var(--paper-audio-player-color, blueviolet);
       }
 
       /* On hover */
 
-      #left:hover #icon,
+      #left:hover #pause,
       :host:not(.cantplay) #right:hover #replay {
         opacity: 1;
       }
@@ -215,11 +224,11 @@ Custom property                             | Description                       
 
       <div id="left"
            class="self-start"
-           on-click="playPause">
+           on-tap="playPause">
 
         <!-- Icon -->
-        <iron-icon id="play" icon="av:play-arrow" class="fit" hidden$="{{ isPlaying }}"></iron-icon>
-        <iron-icon id="pause" icon="av:pause" class="fit" hidden$="{{ !isPlaying }}"></iron-icon>
+        <paper-icon-button id="play" icon="av:play-arrow" class="fit" hidden$="{{ !_showPlayIcon(isPlaying, canBePlayed) }}"></paper-icon-button>
+        <paper-icon-button id="pause" icon="av:pause" class="fit" hidden$="{{ !isPlaying }}"></paper-icon-button>
         <iron-icon id="error" icon="error-outline" class="fit" hidden$="{{ !error }}"></iron-icon>
 
         <!-- Current time -->
@@ -228,20 +237,17 @@ Custom property                             | Description                       
         </div>
       </div>
 
-      <div id="center" class="flex">
+      <div id="center" class="flex" on-down="_onDown">
         <!-- Title -->
         <div id="title" class="fit">{{ title }}</div>
 
         <!-- Audio HTML5 element -->
         <audio id="audio" src="{{ src }}"></audio>
 
-        <!-- Paper progress bar -->
-        <paper-progress id="progress"
-                        step=0.001
-                        value="[[ currentTime ]]"
-                        max="[[ duration ]]"
-                        min=0
-                        on-down="_onDown"></paper-progress>
+        <!-- Progress bar -->
+        <div id="progress" class="fit"></div>
+
+        <paper-ripple></paper-ripple>
 
         <!-- Secondary white title -->
         <div id="progress2" class="fit">
@@ -259,7 +265,7 @@ Custom property                             | Description                       
         </div>
 
         <!-- Icon -->
-        <iron-icon id="replay" class="fit" icon="av:replay"></iron-icon>
+        <paper-icon-button id="replay" class="fit" icon="av:replay"></paper-icon-button>
       </div>
     </div>
   </template>
@@ -387,8 +393,9 @@ Custom property                             | Description                       
           if ( player.isPlaying ) {
             player.currentTime = player.$.audio.currentTime;
 
-            // Update Secondary progress width to display white title
-            var x = (player.currentTime / player.duration) * player.$.progress.getBoundingClientRect().width;
+            var x = (player.currentTime / player.duration) * player.$.center.getBoundingClientRect().width;
+
+            player.$.progress.style.width = x + 'px';
             player.$.progress2.style.width = x + 'px';
 
           } else {
@@ -447,10 +454,10 @@ Custom property                             | Description                       
           var x, r;
 
           x = e.detail.x - player.$.progress.getBoundingClientRect().left;
-          r = (x / player.$.progress.getBoundingClientRect().width) * player.duration;
+          r = (x / player.$.center.getBoundingClientRect().width) * player.duration;
           player.currentTime = player.$.audio.currentTime = r;
 
-          // Update Secondary progress width to display white title
+          player.$.progress.style.width = x + 'px';
           player.$.progress2.style.width = x + 'px';
         }
       },
@@ -474,11 +481,15 @@ Custom property                             | Description                       
 
       _changeColor: function(newValue) {
         var player = this;
-        player.querySelector('paper-progress #primaryProgress.paper-progress').style.backgroundColor = newValue;
         player.$.left.style.backgroundColor = newValue;
         player.$.title.style.color = newValue;
         player.$.duration.style.color = newValue;
+        player.$.progress.style.backgroundColor = newValue;
         player.$.replay.style.color = newValue;
+      },
+
+      _showPlayIcon: function(){
+        return this.canBePlayed && !this.isPlaying;
       }
     });
   </script>
