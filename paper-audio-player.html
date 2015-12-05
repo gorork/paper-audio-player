@@ -2,6 +2,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-progress/paper-progress.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-icons/av-icons.html">
 
 <!--
@@ -73,8 +74,7 @@ Custom property                             | Description                       
       }
 
       #time,
-      #icon,
-      #play {
+      iron-icon {
         color: #fff;
       }
 
@@ -95,9 +95,7 @@ Custom property                             | Description                       
         color: var(--paper-audio-player-color, blueviolet);
       }
 
-      #icon,
-      #play,
-      #replay {
+      iron-icon {
         margin: auto;
       }
 
@@ -105,7 +103,6 @@ Custom property                             | Description                       
         color: var(--paper-audio-player-color, blueviolet);
       }
 
-      #icon,
       #replay {
         opacity: 0;
       }
@@ -221,8 +218,9 @@ Custom property                             | Description                       
            on-click="playPause">
 
         <!-- Icon -->
-        <iron-icon id="icon" class="fit" icon="{{ icon }}" hidden$="{{ !isPlaying }}"></iron-icon>
-        <iron-icon id="play" class="fit" hidden$="{{ isPlaying }}"></iron-icon>
+        <iron-icon id="play" icon="av:play-arrow" class="fit" hidden$="{{ isPlaying }}"></iron-icon>
+        <iron-icon id="pause" icon="av:pause" class="fit" hidden$="{{ !isPlaying }}"></iron-icon>
+        <iron-icon id="error" icon="error-outline" class="fit" hidden$="{{ !error }}"></iron-icon>
 
         <!-- Current time -->
         <div id="time" class="fit" hidden$="{{ !isPlaying }}">
@@ -298,6 +296,9 @@ Custom property                             | Description                       
         duration: {
           type: Number,
           value: 0
+        },
+        error: {
+          type: Boolean
         }
       },
 
@@ -326,7 +327,7 @@ Custom property                             | Description                       
         player.canBePlayed = false;
         player.isPlaying = false;
         player.ended = false;
-        player.icon = '';
+        player.error = false;
       },
 
 
@@ -357,8 +358,6 @@ Custom property                             | Description                       
       _onCanPlay: function() {
         var player = this;
         player.canBePlayed = true;
-        player.icon = 'av:pause-circle-outline';
-        player.$.play.setAttribute('icon', 'av:play-circle-outline');
         player.duration = player.$.audio.duration;
         player.$.title2.style.width = player.$.center.getBoundingClientRect().width + 'px'; // TODO upd on window resize
         if (player.autoPlay) player.$.audio.play();
@@ -423,8 +422,7 @@ Custom property                             | Description                       
         var player = this;
         player.classList.add('cantplay');
         player.title = 'Sorry, can\'t play track: ' + player.title;
-        player.icon = 'av:not-interested';
-        player.$.icon.removeAttribute('hidden');
+        player.error = true;
       },
 
 
