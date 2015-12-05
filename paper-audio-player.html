@@ -67,6 +67,7 @@ Custom property                             | Description                       
         width: 50px;
         position: relative;
       }
+
       #left {
         background-color:  var(--paper-audio-player-color, blueviolet);
       }
@@ -75,13 +76,11 @@ Custom property                             | Description                       
         background-color: rgba(255,255,255,.75);
       }
 
-      #time,
       paper-icon-button,
-      iron-icon{
+      iron-icon {
         color: #fff;
       }
 
-      #time,
       #duration,
       #title,
       #progress2 {
@@ -89,12 +88,8 @@ Custom property                             | Description                       
         line-height: 50px;
       }
 
-      #time,
       #duration {
         font-size: 11px;
-      }
-
-      #duration {
         color: var(--paper-audio-player-color, blueviolet);
       }
 
@@ -104,12 +99,8 @@ Custom property                             | Description                       
       }
 
       #replay {
-        color: var(--paper-audio-player-color, blueviolet);
-      }
-
-      #replay,
-      #pause {
         opacity: 0;
+        color: var(--paper-audio-player-color, blueviolet);
       }
 
       #title,
@@ -143,23 +134,22 @@ Custom property                             | Description                       
         background: var(--paper-audio-player-color, blueviolet);
       }
 
-      paper-ripple{
+      paper-ripple {
         color: var(--paper-audio-player-color, blueviolet);
       }
 
       /* On hover */
 
-      #left:hover #pause,
       :host:not(.cantplay) #right:hover #replay {
         opacity: 1;
       }
 
-      #left:hover #time,
       #right:hover #duration {
         opacity: 0;
       }
 
-      #left:hover #play {
+      #left:hover #play,
+      #left:hover #pause {
         transform: scale3d(1.1, 1.1, 1.1);
         -ms-transform: scale3d(1.1, 1.1, 1.1);
         -webkit-transform: scale3d(1.1, 1.1, 1.1);
@@ -177,10 +167,6 @@ Custom property                             | Description                       
 
       :host(.cantplay) #play {
         opacity: 0;
-      }
-
-      :host(.cantplay) #icon {
-        opacity: 1;
       }
 
       /* Flexbox Helpers */
@@ -231,11 +217,6 @@ Custom property                             | Description                       
         <paper-icon-button id="play" icon="av:play-arrow" class="fit" hidden$="{{ !_showPlayIcon(isPlaying, canBePlayed) }}"></paper-icon-button>
         <paper-icon-button id="pause" icon="av:pause" class="fit" hidden$="{{ !isPlaying }}"></paper-icon-button>
         <iron-icon id="error" icon="error-outline" class="fit" hidden$="{{ !error }}"></iron-icon>
-
-        <!-- Current time -->
-        <div id="time" class="fit" hidden$="{{ !isPlaying }}">
-          <span class="fit">{{ _convertSecToMin(currentTime) }}</span>
-        </div>
       </div>
 
       <div id="center" class="flex" on-down="_onDown">
@@ -262,7 +243,7 @@ Custom property                             | Description                       
 
         <!-- Duration -->
         <div id="duration" class="fit" hidden$="{{ ended }}">
-          <span class="fit">{{ _convertSecToMin(duration) }}</span>
+          <span class="fit">{{ _convertSecToMin(timeLeft) }}</span>
         </div>
 
         <!-- Icon -->
@@ -300,7 +281,7 @@ Custom property                             | Description                       
           value: 0,
           notify: true
         },
-        duration: {
+        timeLeft: {
           type: Number,
           value: 0
         },
@@ -365,7 +346,7 @@ Custom property                             | Description                       
       _onCanPlay: function() {
         var player = this;
         player.canBePlayed = true;
-        player.duration = player.$.audio.duration;
+        player.timeLeft = player.$.audio.duration;
         player.$.title2.style.width = player.$.center.getBoundingClientRect().width + 'px'; // TODO upd on window resize
         if (player.autoPlay) player.$.audio.play();
       },
@@ -393,8 +374,9 @@ Custom property                             | Description                       
         player.timer.sliderUpdateInterval = setInterval( function(){
           if ( player.isPlaying ) {
             player.currentTime = player.$.audio.currentTime;
+            player.timeLeft = player.$.audio.duration - player.currentTime;
 
-            var percentagePlayed = player.currentTime / player.duration;
+            var percentagePlayed = player.currentTime / player.$.audio.duration;
 
             player.$.progress.style.transform = 'translateX('+(-1 * player.$.center.getBoundingClientRect().width + percentagePlayed * player.$.center.getBoundingClientRect().width)+'px)';
             player.$.progress2.style.width = percentagePlayed * player.$.center.getBoundingClientRect().width + 'px';
@@ -453,12 +435,12 @@ Custom property                             | Description                       
 
         if(player.canBePlayed){
           var x = e.detail.x - player.$.center.getBoundingClientRect().left;
-          var r = (x / player.$.center.getBoundingClientRect().width) * player.duration;
+          var r = (x / player.$.center.getBoundingClientRect().width) * player.$.audio.duration;
 
           player.currentTime = player.$.audio.currentTime = r;
 
-          var percentagePlayed = player.currentTime / player.duration;
-          player.$.progress.style.transform = 'scaleX('+percentagePlayed+')';
+          var percentagePlayed = player.currentTime / player.$.audio.duration;
+          player.$.progress.style.transform = 'scaleX(' + percentagePlayed + ')';
 
           player.$.progress2.style.width = x + 'px';
 
