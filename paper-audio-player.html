@@ -124,21 +124,22 @@ Custom property                             | Description                       
       }
 
       #progress2 {
-        width: 0;
+        width: 0px;
         z-index: 5;
         color: #fff;
         overflow: hidden;
-        transition: linear .06s width;
       }
 
       #center {
         position: relative;
+        overflow: hidden;
         background: rgba(255,255,255,.75);
       }
 
       #progress {
-        width: 0px;
-        transition: linear .06s width;
+        width: 100%;
+        transform-origin: left;
+        transform: scaleX(0);
         background: var(--paper-audio-player-color, blueviolet);
       }
 
@@ -393,15 +394,15 @@ Custom property                             | Description                       
           if ( player.isPlaying ) {
             player.currentTime = player.$.audio.currentTime;
 
-            var x = (player.currentTime / player.duration) * player.$.center.getBoundingClientRect().width;
+            var percentagePlayed = player.currentTime / player.duration;
 
-            player.$.progress.style.width = x + 'px';
-            player.$.progress2.style.width = x + 'px';
+            player.$.progress.style.transform = 'translateX('+(-1 * player.$.center.getBoundingClientRect().width + percentagePlayed * player.$.center.getBoundingClientRect().width)+'px)';
+            player.$.progress2.style.width = percentagePlayed * player.$.center.getBoundingClientRect().width + 'px';
 
           } else {
             clearInterval(player.timer.sliderUpdateInterval);
           }
-        }, 120);
+        }, 60);
       },
 
 
@@ -451,13 +452,14 @@ Custom property                             | Description                       
         var player = this;
 
         if(player.canBePlayed){
-          var x, r;
+          var x = e.detail.x - player.$.center.getBoundingClientRect().left;
+          var r = (x / player.$.center.getBoundingClientRect().width) * player.duration;
 
-          x = e.detail.x - player.$.progress.getBoundingClientRect().left;
-          r = (x / player.$.center.getBoundingClientRect().width) * player.duration;
           player.currentTime = player.$.audio.currentTime = r;
 
-          player.$.progress.style.width = x + 'px';
+          var percentagePlayed = player.currentTime / player.duration;
+          player.$.progress.style.transform = 'scaleX('+percentagePlayed+')';
+
           player.$.progress2.style.width = x + 'px';
 
           if(!player.isPlaying){
