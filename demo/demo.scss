@@ -24,6 +24,14 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &.row-horizontal {
+    flex-direction: row;
+  }
+
+  &.row-vertical {
+    flex-direction: column;
+  }
 }
 
 .row {
@@ -36,6 +44,18 @@ p {
     border-top: 1px dotted lightgrey;
   }
 
+  &.logos {
+    height: 100px;
+
+    p {
+      top: - 20px;
+    }
+  }
+
+  &.error {
+    height: 160px;
+  }
+
   &.image {
     height: 400px;
   }
@@ -44,6 +64,10 @@ p {
     position: absolute;
     text-align: center;
     width: 100%;
+  }
+
+  .logo {
+    width: 150px;
   }
 }
 

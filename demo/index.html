@@ -32,12 +32,12 @@
   </div>
 
     <!-- row -->
-    <div class="row image">
+    <div class="row image row-vertical">
       <paper-audio-player class="orange"
                           src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"
                           title="Justin Timberlake - Suit & Tie (Oscar Wylde Remix)"></paper-audio-player></div>
     <!-- row -->
-    <div class="row">
+    <div class="row row-horizontal">
       <div class="col">
         <paper-audio-player class="blue"
                             src="http://nadikun.com/audio/pink-shades-o-pnr.mp3"
@@ -53,11 +53,16 @@
     </div>
 
     <!-- row -->
-    <div class="row">
+    <div class="row row-vertical error">
       <p>When audio file can't be played by browser or file path is invalid</p>
       <paper-audio-player class="broken"
                           src="http://nadikun.com/audio/somefile.m3"
                           title="Sting - Desert Rose"></paper-audio-player>
+    </div>
+
+    <div class="row row-vertical logos">
+      <p>In production by</p>
+      <img src="googlelogo.png" alt="Google logo new small" class="logo">
     </div>
 
   <!-- footer -->
