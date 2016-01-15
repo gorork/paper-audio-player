@@ -31,6 +31,8 @@ Or [download as ZIP](https://github.com/gorork/paper-audio-player/archive/master
 - Polymer 1.0
 - Paper-progress
 - Iron-Icons
+- Paper-icon-button
+- Paper-ripple
 
 These dependencies are managed via [Bower](http://bower.io/). You can
 install that via:
