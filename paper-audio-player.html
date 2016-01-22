@@ -224,7 +224,7 @@ Custom property                             | Description                       
         <div id="title" class="fit">{{ title }}</div>
 
         <!-- Audio HTML5 element -->
-        <audio id="audio" src="{{ src }}"></audio>
+        <audio id="audio" src="{{ src }}" preload="{{ preload }}"></audio>
 
         <!-- Progress bar -->
         <div id="progress" class="fit"></div>
@@ -275,6 +275,10 @@ Custom property                             | Description                       
         autoPlay: {
           type: Boolean,
           value: false
+        },
+        preload: {
+          type: String,
+          value: 'auto'
         },
         currentTime: {
           type: Number,
