@@ -17,6 +17,7 @@
                         auto-play
                         title="Some title"
                         color="#F05C38"
+                        preload="none"
                         src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"></paper-audio-player>
 
     <script>
@@ -40,6 +41,11 @@
           assert.equal(basicPlayer.$.title.style.color, 'rgb(240, 92, 56)');
           assert.equal(basicPlayer.$.duration.style.color, 'rgb(240, 92, 56)');
           assert.equal(basicPlayer.$.replay.style.color, 'rgb(240, 92, 56)');
+        });
+
+        test('defines the "preload" property', function() {
+          assert.equal(basicPlayer.preload, 'none');
+          assert.equal(basicPlayer.$.audio.preload, 'none');
         });
 
         test('change the "src" property dynamically', function() {
