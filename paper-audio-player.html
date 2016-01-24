@@ -320,6 +320,11 @@ Custom property                             | Description                       
         player.isPlaying = false;
         player.ended = false;
         player.error = false;
+
+        // If player has auto-play attribute set,
+        // it ignores preload="none" property and starts playing on load.
+        // This behavior corresponds to the native audio element behavior.
+        if (player.autoPlay) player.$.audio.play();
       },
 
 
@@ -331,6 +336,12 @@ Custom property                             | Description                       
 
         if ( player.canBePlayed ) {
           return player.isPlaying ? player.$.audio.pause() : player.$.audio.play();
+        } else if (player.preload === 'none') {
+          // If player can't be played, because audio wasn't pre-loaded
+          // due to the preload="none" property set,
+          // load the audio file at this point and start playing it immediately
+          player.$.audio.load();
+          player.$.audio.play();
         }
       },
 
@@ -352,7 +363,6 @@ Custom property                             | Description                       
         player.canBePlayed = true;
         player.timeLeft = player.$.audio.duration;
         player.$.title2.style.width = player.$.center.getBoundingClientRect().width + 'px'; // TODO upd on window resize
-        if (player.autoPlay) player.$.audio.play();
       },
 
 
