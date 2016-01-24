@@ -214,7 +214,7 @@ Custom property                             | Description                       
            on-tap="playPause">
 
         <!-- Icon -->
-        <paper-icon-button id="play" icon="av:play-arrow" class="fit" hidden$="{{ !_showPlayIcon(isPlaying, canBePlayed) }}"></paper-icon-button>
+        <paper-icon-button id="play" icon="av:play-arrow" class="fit" hidden$="{{ _hidePlayIcon(isPlaying, canBePlayed) }}"></paper-icon-button>
         <paper-icon-button id="pause" icon="av:pause" class="fit" hidden$="{{ !isPlaying }}"></paper-icon-button>
         <iron-icon id="error" icon="error-outline" class="fit" hidden$="{{ !error }}"></iron-icon>
       </div>
@@ -509,8 +509,8 @@ Custom property                             | Description                       
         player.$.replay.style.color = newValue;
       },
 
-      _showPlayIcon: function(){
-        return this.canBePlayed && !this.isPlaying;
+      _hidePlayIcon: function(isPlaying, canBePlayed){
+        return isPlaying ? true : !(canBePlayed || this.preload === 'none');
       }
     });
   </script>
