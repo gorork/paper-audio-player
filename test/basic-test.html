@@ -35,7 +35,7 @@
 
         test('defines the "color" property', function() {
           assert.equal(basicPlayer.color, '#F05C38');
-          assert.equal(basicPlayer.querySelector('paper-progress #primaryProgress.paper-progress').style.backgroundColor, 'rgb(240, 92, 56)');
+          assert.equal(basicPlayer.querySelector('#progress').style.backgroundColor, 'rgb(240, 92, 56)');
           assert.equal(basicPlayer.$.left.style.backgroundColor, 'rgb(240, 92, 56)');
           assert.equal(basicPlayer.$.title.style.color, 'rgb(240, 92, 56)');
           assert.equal(basicPlayer.$.duration.style.color, 'rgb(240, 92, 56)');
