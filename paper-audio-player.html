@@ -324,6 +324,7 @@ Custom property                             | Description                       
         player.isPlaying = false;
         player.ended = false;
         player.error = false;
+        player.$.audio.currentTime = player.timeOffset; // apply the audio start time property
 
         // If player has auto-play attribute set,
         // it ignores preload="none" property and starts playing on load.
@@ -367,6 +368,14 @@ Custom property                             | Description                       
         player.canBePlayed = true;
         player.timeLeft = player.$.audio.duration;
         player.$.title2.style.width = player.$.center.getBoundingClientRect().width + 'px'; // TODO upd on window resize
+
+        // If player has a Time Offset specified
+        // style the progress bar and title accordingly
+        if (player.timeOffset > 0) {
+          var percentagePlayed = player.timeOffset / player.$.audio.duration;
+          player.$.progress.style.transform = 'scaleX(' + percentagePlayed + ')';
+          player.$.progress2.style.width = percentagePlayed * player.$.center.getBoundingClientRect().width + 'px';
+        }
       },
 
 
