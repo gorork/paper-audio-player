@@ -42,12 +42,14 @@
           assert.equal(basicPlayer.$.replay.style.color, 'rgb(240, 92, 56)');
         });
 
-        test('change the "src" property dynamically', function() {
+        test('change the "src" property dynamically', function(done) {
+          assert.equal(basicPlayer.src, 'http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3');
           setTimeout(function(){
             basicPlayer.src = 'http://nadikun.com/audio/noclique-day2.wav';
             assert.equal(basicPlayer.src, 'http://nadikun.com/audio/noclique-day2.wav');
             assert.equal(basicPlayer.$.audio.src, 'http://nadikun.com/audio/noclique-day2.wav');
-          }, 5000);
+            done();
+          }, 1000);
         });
 
       });

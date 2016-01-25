@@ -13,43 +13,83 @@
 <body>
 
 <!-- Basic player -->
-<paper-audio-player id="preload"
+<paper-audio-player id="nopreload"
                     preload="none"
                     src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"></paper-audio-player>
 
-<paper-audio-player id="preloadAutoplay"
+<paper-audio-player id="nopreloadAutoplay"
                     auto-play
                     preload="none"
                     src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"></paper-audio-player>
 
+<paper-audio-player id="metapreload"
+                    preload="metadata"
+                    src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"></paper-audio-player>
+
+<paper-audio-player id="autopreload"
+                    preload="auto"
+                    src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"></paper-audio-player>
+
 <script>
-  var preloadPlayer = document.getElementById('preload');
-  var preloadAutoplayPlayer = document.getElementById('preloadAutoplay');
+  var noPreloadPlayer = document.getElementById('nopreload');
+  var noPreloadAutoplayPlayer = document.getElementById('nopreloadAutoplay');
+  var metaPreloadPlayer = document.getElementById('metapreload');
+  var autoPreloadPlayer = document.getElementById('autopreload');
 
   suite('<paper-audio-player>', function() {
 
-    test('defines the "preload" property', function() {
-      assert.equal(preloadPlayer.preload, 'none');
-      assert.equal(preloadPlayer.$.audio.preload, 'none');
+    test('defines the "preload=none" property', function(done) {
+      assert.equal(noPreloadPlayer.preload, 'none');
+      assert.equal(noPreloadPlayer.$.audio.preload, 'none');
       setTimeout(function(){
-        assert.equal(preloadPlayer.isPlaying, false);
-      }, 5000);
+        assert.equal(noPreloadPlayer.$.audio.readyState, 0);
+        assert.notOk(noPreloadPlayer.canBePlayed);
+        done();
+      }, 2000);
     });
 
-    test('the "preload" property is ignored if autoPlay is set', function() {
-      assert.equal(preloadAutoplayPlayer.preload, 'none');
-      assert.equal(preloadAutoplayPlayer.$.audio.preload, 'none');
+    test('the "preload=none" property is ignored if autoPlay is set', function(done) {
+      assert.equal(noPreloadAutoplayPlayer.preload, 'none');
+      assert.equal(noPreloadAutoplayPlayer.$.audio.preload, 'none');
       setTimeout(function(){
-        assert.equal(preloadAutoplayPlayer.$.audio.paused, false);
-      }, 5000);
+        assert.ok(noPreloadAutoplayPlayer.canBePlayed);
+        assert.notOk(noPreloadAutoplayPlayer.$.audio.paused);
+        done();
+      }, 2000);
     });
 
-    test('dynamically changed audio file will not be pre-loaded', function() {
+    test('dynamically changed audio file will not be pre-loaded', function(done) {
+      assert.equal(noPreloadPlayer.$.audio.readyState, 0);
+      assert.notOk(noPreloadPlayer.canBePlayed);
       setTimeout(function(){
-        preloadPlayer.src = 'http://nadikun.com/audio/noclique-day2.wav';
-        assert.equal(preloadPlayer.src, 'http://nadikun.com/audio/noclique-day2.wav');
-        assert.equal(preloadPlayer.$.audio.src, 'http://nadikun.com/audio/noclique-day2.wav');
-        assert.isAbove(preloadAutoplayPlayer.$.audio.duration, -1);
+        noPreloadPlayer.src = 'http://nadikun.com/audio/noclique-day2.wav';
+        assert.equal(noPreloadPlayer.src, 'http://nadikun.com/audio/noclique-day2.wav');
+        assert.equal(noPreloadPlayer.$.audio.src, 'http://nadikun.com/audio/noclique-day2.wav');
+        assert.equal(noPreloadPlayer.$.audio.readyState, 0);
+        assert.notOk(noPreloadPlayer.canBePlayed);
+        done();
+      }, 2000);
+    });
+
+    test('defines the "preload=metadata" property', function(done) {
+      assert.equal(metaPreloadPlayer.preload, 'metadata');
+      assert.equal(metaPreloadPlayer.$.audio.preload, 'metadata');
+      setTimeout(function(){
+        assert.isAbove(metaPreloadPlayer.$.audio.readyState, 0);
+        assert.ok(metaPreloadPlayer.canBePlayed);
+        assert.notOk(metaPreloadPlayer.isPlaying);
+        done();
+      }, 2000);
+    });
+
+    test('defines the "preload=auto" property', function(done) {
+      assert.equal(autoPreloadPlayer.preload, 'auto');
+      assert.equal(autoPreloadPlayer.$.audio.preload, 'auto');
+      setTimeout(function(){
+        assert.isAbove(autoPreloadPlayer.$.audio.readyState, 2);
+        assert.ok(autoPreloadPlayer.canBePlayed);
+        assert.notOk(autoPreloadPlayer.isPlaying);
+        done();
       }, 5000);
     });
 
