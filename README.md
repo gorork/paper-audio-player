@@ -73,6 +73,10 @@ Attribute     | Options                                 | Description
 `title`       | *string*                                | Customize the track name
 `color`       | *string*                                | Customize the accent color that will be used
 `auto-play`   | *boolean*                               | Will start playing the audio file automatically
+`preload`     | *string*: `auto`, `metadata`, `none`    | Defines if audio file should be pre-loaded.
+`time-offset` | *number*                                | Sets the time offset in `seconds` for audio to start playing at this time.
+
+**Note**: Just like in native audio element, the `preload` property will be ignored if `auto-play` is set on a player.
 
 ## Development
 
