@@ -48,7 +48,7 @@ Then, go ahead and download the player's dependencies:
 1. Import Web Components' polyfill:
 
     ```html
-    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     ```
 
 2. Import Player element:
