@@ -2,10 +2,11 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-progress/paper-progress.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
-<link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../iron-icons/av-icons.html">
 <link rel="import" href="../paper-ripple/paper-ripple.html">
+
+<link rel="import" href="paper-audio-icons.html">
+
 
 <!--
 A custom audio player with material paper style and clean design.
@@ -214,9 +215,9 @@ Custom property                             | Description                       
            on-tap="playPause">
 
         <!-- Icon -->
-        <paper-icon-button id="play" icon="av:play-arrow" class="fit" hidden$="{{ _hidePlayIcon(isPlaying, canBePlayed) }}"></paper-icon-button>
-        <paper-icon-button id="pause" icon="av:pause" class="fit" hidden$="{{ !isPlaying }}"></paper-icon-button>
-        <iron-icon id="error" icon="error-outline" class="fit" hidden$="{{ !error }}"></iron-icon>
+        <paper-icon-button id="play" icon="paper-audio-icons:play-arrow" class="fit" hidden$="{{ _hidePlayIcon(isPlaying, canBePlayed) }}"></paper-icon-button>
+        <paper-icon-button id="pause" icon="paper-audio-icons:pause" class="fit" hidden$="{{ !isPlaying }}"></paper-icon-button>
+        <iron-icon id="error" icon="paper-audio-icons:error-outline" class="fit" hidden$="{{ !error }}"></iron-icon>
       </div>
 
       <div id="center" class="flex" on-down="_onDown">
@@ -247,7 +248,7 @@ Custom property                             | Description                       
         </div>
 
         <!-- Icon -->
-        <paper-icon-button id="replay" class="fit" icon="av:replay"></paper-icon-button>
+        <paper-icon-button id="replay" class="fit" icon="paper-audio-icons:replay"></paper-icon-button>
       </div>
     </div>
   </template>
