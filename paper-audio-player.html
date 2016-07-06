@@ -4,6 +4,7 @@
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-ripple/paper-ripple.html">
+<link rel="import" href="../iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
 
 <link rel="import" href="paper-audio-icons.html">
 
@@ -258,6 +259,16 @@ Custom property                             | Description                       
       is: 'paper-audio-player',
 
       //
+      // Component behaviors
+      behaviors: [Polymer.IronA11yKeysBehavior],
+
+      //
+      // Define component default attributes
+      hostAttributes: {
+        tabindex: 0
+      },
+
+      //
       // Define public properties
 
       properties: {
@@ -290,6 +301,14 @@ Custom property                             | Description                       
           type: Number,
           value: 0
         },
+        smallSkip: {
+          type: Number,
+          value: 15
+        },
+        largeSkip: {
+          type: Number,
+          value: 60
+        },
         error: {
           type: Boolean
         },
@@ -311,6 +330,14 @@ Custom property                             | Description                       
         'audio.error'           : '_onError'
       },
 
+      keyBindings: {
+        'space' : 'playPause',
+        'enter' : 'playPause',
+        'left'  : '_reverseSmall',
+        'right' : '_skipSmall',
+        'down'  : '_reverseLarge',
+        'up'    : '_skipLarge'
+      },
 
       //
       // When element is created
@@ -338,6 +365,49 @@ Custom property                             | Description                       
         if ( player.canBePlayed ) player.isPlaying ? player.$.audio.pause() : player.$.audio.play();
       },
 
+      // Move the play position back a small distance
+      _reverseSmall: function(e) {
+        var player = this;
+        var newTime = 0;
+        if(player.currentTime - player.smallSkip > 0) {
+          newTime = player.currentTime - player.smallSkip;
+        }
+        player._updatePlayPosition(newTime);
+        if (!player.isPlaying) player.$.audio.play();
+      },
+
+      // Move the play position back a large distance
+      _reverseLarge: function(e) {
+        var player = this;
+        var newTime = 0;
+        if(player.currentTime - player.largeSkip > 0) {
+          newTime = player.currentTime - player.largeSkip;
+        }
+        player._updatePlayPosition(newTime);
+        if (!player.isPlaying) player.$.audio.play();
+      },
+
+      // Move the play position forward a small distance
+      _skipSmall: function(e) {
+        var player = this;
+        var newTime = player.currentTime + player.timeLeft;
+        if(player.smallSkip < player.timeLeft) {
+          newTime = player.currentTime + player.smallSkip;
+        }
+        player._updatePlayPosition(newTime);
+        if (!player.isPlaying) player.$.audio.play();
+      },
+
+      // Move the play position forward a large distance
+      _skipLarge: function(e) {
+        var player = this;
+        var newTime = player.currentTime + player.timeLeft;
+        if(player.largeSkip < player.timeLeft) {
+          newTime = player.currentTime + player.largeSkip;
+        }
+        player._updatePlayPosition(newTime);
+        if (!player.isPlaying) player.$.audio.play();
+      },
 
       // Restart
 
@@ -477,11 +547,20 @@ Custom property                             | Description                       
         var x = e.detail.x - player.$.center.getBoundingClientRect().left;
         var r = (x / player.$.center.getBoundingClientRect().width) * player.$.audio.duration;
 
-        player.currentTime = player.$.audio.currentTime = r;
+        this._updatePlayPosition(r);
+      },
+
+      //
+      // Helper function
+      // updates the progress bar based on a time variable
+      _updatePlayPosition: function(newTime) {
+        var player = this;
+        player.currentTime = player.$.audio.currentTime = newTime;
 
         var percentagePlayed = player.currentTime / player.$.audio.duration;
         player._updateVisualProgress(percentagePlayed);
       },
+
 
       //
       // If src is changed when track is playing,
