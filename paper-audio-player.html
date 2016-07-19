@@ -333,10 +333,10 @@ Custom property                             | Description                       
       keyBindings: {
         'space' : 'playPause',
         'enter' : 'playPause',
-        'left'  : '_reverseSmall',
-        'right' : '_skipSmall',
-        'down'  : '_reverseLarge',
-        'up'    : '_skipLarge'
+        'left'  : '_skipReverseByInterval',
+        'right' : '_skipReverseByInterval',
+        'down'  : '_skipReverseByInterval',
+        'up'    : '_skipReverseByInterval'
       },
 
       //
@@ -362,54 +362,19 @@ Custom property                             | Description                       
         if (!!e) e.preventDefault();
         var player = this;
 
-        if ( player.canBePlayed ) player.isPlaying ? player.$.audio.pause() : player.$.audio.play();
-      },
-
-      // Move the play position back a small distance
-      _reverseSmall: function(e) {
-        var player = this;
-        var newTime = 0;
-        if(player.currentTime - player.smallSkip > 0) {
-          newTime = player.currentTime - player.smallSkip;
+        if ( player.canBePlayed ) {
+          return player.isPlaying ? player.$.audio.pause() : player.$.audio.play();
+        } else if (player.preload === 'none') {
+          // If player can't be played, because audio wasn't pre-loaded
+          // due to the preload="none" property set,
+          // load the audio file at this point and start playing it immediately
+          player.$.audio.load();
+          player.$.audio.play();
         }
-        player._updatePlayPosition(newTime);
-        if (!player.isPlaying) player.$.audio.play();
       },
 
-      // Move the play position back a large distance
-      _reverseLarge: function(e) {
-        var player = this;
-        var newTime = 0;
-        if(player.currentTime - player.largeSkip > 0) {
-          newTime = player.currentTime - player.largeSkip;
-        }
-        player._updatePlayPosition(newTime);
-        if (!player.isPlaying) player.$.audio.play();
-      },
-
-      // Move the play position forward a small distance
-      _skipSmall: function(e) {
-        var player = this;
-        var newTime = player.currentTime + player.timeLeft;
-        if(player.smallSkip < player.timeLeft) {
-          newTime = player.currentTime + player.smallSkip;
-        }
-        player._updatePlayPosition(newTime);
-        if (!player.isPlaying) player.$.audio.play();
-      },
-
-      // Move the play position forward a large distance
-      _skipLarge: function(e) {
-        var player = this;
-        var newTime = player.currentTime + player.timeLeft;
-        if(player.largeSkip < player.timeLeft) {
-          newTime = player.currentTime + player.largeSkip;
-        }
-        player._updatePlayPosition(newTime);
-        if (!player.isPlaying) player.$.audio.play();
-      },
-
-      // Restart
+      //
+      // Restart audio
 
       restart: function(e){
         if (!!e) e.preventDefault();
@@ -450,6 +415,33 @@ Custom property                             | Description                       
         player._startProgressTimer();
       },
 
+      //
+      // Skip or reverse by pre-defined intervals
+
+      _skipReverseByInterval: function(e) {
+        if (!!e) e.preventDefault();
+
+        var player = this,
+            newTime = 0;
+
+        switch (e.detail.key) {
+          case 'up':
+            if (player.largeSkip < player.timeLeft) newTime = player.currentTime + player.largeSkip;
+            break;
+          case 'down':
+            if (player.currentTime - player.largeSkip > 0) newTime = player.currentTime - player.largeSkip;
+            break;
+          case 'right':
+            if (player.smallSkip < player.timeLeft) newTime = player.currentTime + player.smallSkip;
+            break;
+          default:
+            if (player.currentTime - player.smallSkip > 0) newTime = player.currentTime - player.smallSkip;
+        }
+
+        player._updatePlayPosition(newTime);
+        if (!player.isPlaying) player.$.audio.play();
+      },
+
 
       // starts Timer
 
@@ -472,7 +464,6 @@ Custom property                             | Description                       
           }
         }, 60);
       },
-
 
       // when Player is paused
 
@@ -552,7 +543,8 @@ Custom property                             | Description                       
 
       //
       // Helper function
-      // updates the progress bar based on a time variable
+      // updates the current time based on a time variable
+
       _updatePlayPosition: function(newTime) {
         var player = this;
         player.currentTime = player.$.audio.currentTime = newTime;
@@ -561,6 +553,17 @@ Custom property                             | Description                       
         player._updateVisualProgress(percentagePlayed);
       },
 
+      //
+      // Helper function
+      // updates the progress bar based on a percentage played
+
+      _updateVisualProgress: function(percentagePlayed) {
+        var player = this;
+
+        player.$.progress.style.transform = 'scaleX(' + percentagePlayed + ')';
+        player.$.progress2.style.width = percentagePlayed * 100 + '%';
+        player.$.title2.style.width = (1 / percentagePlayed) * 100 + '%';
+      },
 
       //
       // If src is changed when track is playing,
@@ -592,18 +595,8 @@ Custom property                             | Description                       
         return isPlaying ? true : !(canBePlayed || this.preload === 'none');
       },
 
-      _setPreload: function(ap, p) {
-        var player = this;
-        //return player.autoPlay ? 'auto' : player.preload;
-        return ap ? 'auto' : p;
-      },
-
-      _updateVisualProgress: function(percentagePlayed) {
-        var player = this;
-
-        player.$.progress.style.transform = 'scaleX(' + percentagePlayed + ')';
-        player.$.progress2.style.width = percentagePlayed * 100 + '%';
-        player.$.title2.style.width = (1 / percentagePlayed) * 100 + '%';
+      _setPreload: function(autoplay, preload) {
+        return autoplay ? 'auto' : preload;
       }
     });
   </script>
