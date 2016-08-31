@@ -368,14 +368,12 @@ Custom property                             | Description                       
         var player = this;
         player.canBePlayed = true;
         player.timeLeft = player.$.audio.duration;
-        player.$.title2.style.width = player.$.center.getBoundingClientRect().width + 'px'; // TODO upd on window resize
 
         // If player has a Time Offset specified
         // style the progress bar and title accordingly
         if (player.timeOffset > 0) {
           var percentagePlayed = player.timeOffset / player.$.audio.duration;
-          player.$.progress.style.transform = 'scaleX(' + percentagePlayed + ')';
-          player.$.progress2.style.width = percentagePlayed * player.$.center.getBoundingClientRect().width + 'px';
+          player._updateVisualProgress(percentagePlayed);
         }
       },
 
@@ -405,9 +403,7 @@ Custom property                             | Description                       
             player.timeLeft = player.$.audio.duration - player.currentTime;
 
             var percentagePlayed = player.currentTime / player.$.audio.duration;
-
-            player.$.progress.style.transform = 'translateX('+(-1 * player.$.center.getBoundingClientRect().width + percentagePlayed * player.$.center.getBoundingClientRect().width)+'px)';
-            player.$.progress2.style.width = percentagePlayed * player.$.center.getBoundingClientRect().width + 'px';
+            player._updateVisualProgress(percentagePlayed);
 
           } else {
             clearInterval(player.timer.sliderUpdateInterval);
@@ -492,9 +488,7 @@ Custom property                             | Description                       
         player.currentTime = player.$.audio.currentTime = r;
 
         var percentagePlayed = player.currentTime / player.$.audio.duration;
-        player.$.progress.style.transform = 'scaleX(' + percentagePlayed + ')';
-
-        player.$.progress2.style.width = x + 'px';
+        player._updateVisualProgress(percentagePlayed);
       },
 
       //
@@ -531,6 +525,14 @@ Custom property                             | Description                       
         var player = this;
         //return player.autoPlay ? 'auto' : player.preload;
         return ap ? 'auto' : p;
+      },
+
+      _updateVisualProgress: function(percentagePlayed) {
+        var player = this;
+
+        player.$.progress.style.transform = 'scaleX(' + percentagePlayed + ')';
+        player.$.progress2.style.width = percentagePlayed * 100 + '%';
+        player.$.title2.style.width = (1 / percentagePlayed) * 100 + '%';
       }
     });
   </script>
