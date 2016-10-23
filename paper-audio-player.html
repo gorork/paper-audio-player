@@ -225,7 +225,7 @@ Custom property                             | Description                       
         <div id="title" class="fit">{{ title }}</div>
 
         <!-- Audio HTML5 element -->
-        <audio id="audio" src="{{ src }}" preload="{{ preload }}"></audio>
+        <audio id="audio" src="{{ src }}" preload="{{ _setPreload(autoPlay, preload) }}"></audio>
 
         <!-- Progress bar -->
         <div id="progress" class="fit"></div>
@@ -330,14 +330,14 @@ Custom property                             | Description                       
         // If player has auto-play attribute set,
         // it ignores preload="none" property and starts playing on load.
         // This behavior corresponds to the native audio element behavior.
-        if (player.autoPlay) player.$.audio.play();
+        if (player.autoPlay) player.playPause();
       },
 
 
       // Play/Pause controls
 
       playPause: function(e){
-        e.preventDefault();
+        if (!!e) e.preventDefault();
         var player = this;
 
         if ( player.canBePlayed ) {
@@ -525,6 +525,12 @@ Custom property                             | Description                       
 
       _hidePlayIcon: function(isPlaying, canBePlayed){
         return isPlaying ? true : !(canBePlayed || this.preload === 'none');
+      },
+
+      _setPreload: function(ap, p) {
+        var player = this;
+        //return player.autoPlay ? 'auto' : player.preload;
+        return ap ? 'auto' : p;
       }
     });
   </script>
