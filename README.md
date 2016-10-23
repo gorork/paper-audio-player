@@ -116,6 +116,10 @@ Then, you can run your tests on _all_ of your local browsers via:
 
 Or, simply navigate to the `/test` directory if you are using Polyserve: `http://localhost:8080/components/paper-audio-player/test/`
 
+**(OS X only)** Manually install the latest SafariDriver extention for Selenium - check the 1st step in Quick Start [here](https://www.polymer-project.org/1.0/docs/tools/tests).
+
+**Firefox 46** At the moment please fall back to test in Firefox 46 or earlier - see WCT issue [here](https://github.com/Polymer/web-component-tester/issues/317).
+
 #### WCT Tips
 
 `wct -l chrome` will only run tests in chrome.
@@ -126,11 +130,13 @@ Or, simply navigate to the `/test` directory if you are using Polyserve: `http:/
 
 ## Contributing
 
-1. Fork it!
+1. Fork it!0
 2. Create your feature branch: `git checkout -b new-feature`
 3. Commit your changes: `git commit -m 'Add some awesomeness'`
 4. Push to the branch: `git push origin new-feature`
 5. Submit a pull request!
+
+**Cover your code with tests and make sure all new and existing tests pass locally before pushing.**
 
 ## License
 

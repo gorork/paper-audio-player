@@ -1,23 +1,38 @@
 {
   "plugins": {
+    "local": {
+      "disabled": false,
+      "browsers": ["chrome", "canary", "firefox", "safari"]
+    },
     "sauce": {
-      "browsers": [{
-        "browserName": "microsoftedge",
-        "platform": "Windows 10",
-        "version": ""
-      }, {
-        "browserName": "internet explorer",
-        "platform": "Windows 8.1",
-        "version": "11"
-      }, {
-        "browserName": "safari",
-        "platform": "OS X 10.11",
-        "version": "9"
-      }, {
-        "browserName": "safari",
-        "platform": "OS X 10.10",
-        "version": "8"
-      }]
+      "disabled": true,
+      "browsers": [
+        {
+          "browserName": "microsoftedge",
+          "platform": "Windows 10",
+          "version": ""
+        }, {
+          "browserName": "firefox",
+          "platform": "Windows 10",
+          "version": "45"
+        }, {
+          "browserName": "chrome",
+          "platform": "Windows 10",
+          "version": ""
+        }, {
+          "browserName": "safari",
+          "platform": "OS X 10.10",
+          "version": "8"
+        }, {
+          "browserName": "firefox",
+          "platform": "OS X 10.11",
+          "version": "45"
+        }, {
+          "browserName": "chrome",
+          "platform": "OS X 10.11",
+          "version": ""
+        }
+      ]
     }
   }
 }
