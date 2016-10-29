@@ -326,11 +326,6 @@ Custom property                             | Description                       
         player.ended = false;
         player.error = false;
         player.$.audio.currentTime = player.timeOffset; // apply the audio start time property
-
-        // If player has auto-play attribute set,
-        // it ignores preload="none" property and starts playing on load.
-        // This behavior corresponds to the native audio element behavior.
-        if (player.autoPlay) player.playPause();
       },
 
 
@@ -340,22 +335,14 @@ Custom property                             | Description                       
         if (!!e) e.preventDefault();
         var player = this;
 
-        if ( player.canBePlayed ) {
-          return player.isPlaying ? player.$.audio.pause() : player.$.audio.play();
-        } else if (player.preload === 'none') {
-          // If player can't be played, because audio wasn't pre-loaded
-          // due to the preload="none" property set,
-          // load the audio file at this point and start playing it immediately
-          player.$.audio.load();
-          player.$.audio.play();
-        }
+        if ( player.canBePlayed ) player.isPlaying ? player.$.audio.pause() : player.$.audio.play();
       },
 
 
       // Restart
 
       restart: function(e){
-        e.preventDefault();
+        if (!!e) e.preventDefault();
         var player = this;
         player.$.audio.currentTime = 0;
         if ( !player.isPlaying ) player.$.audio.play();
@@ -375,6 +362,11 @@ Custom property                             | Description                       
           var percentagePlayed = player.timeOffset / player.$.audio.duration;
           player._updateVisualProgress(percentagePlayed);
         }
+
+        // If player has auto-play attribute set,
+        // it ignores preload="none" property and starts playing on load.
+        // This behavior corresponds to the native audio element behavior.
+        if (player.autoPlay) player.$.audio.play();
       },
 
 
