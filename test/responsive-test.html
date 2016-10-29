@@ -6,37 +6,51 @@
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
+
 
   <!-- Import the paper-audio-player element -->
+  <link rel="import" href="../../test-fixture/test-fixture.html">
   <link rel="import" href="../paper-audio-player.html">
 </head>
 <body>
 
-<!-- Basic player -->
-<paper-audio-player id="resizing" src="./pink-shades-o-pnr.mp3"></paper-audio-player>
+<!-- Resizing player -->
+<test-fixture id="resizing">
+  <template>
+    <paper-audio-player src="./pink-shades-o-pnr.mp3" time-offset="2"></paper-audio-player>
+  </template>
+</test-fixture>
 
 <script>
-  var resizingPlayer = document.getElementById('resizing');
 
   suite('<paper-audio-player>', function() {
+    var resizingPlayer,
+        title,
+        title2,
+        onePercentDelta;
 
-    test('on window resize both titles have the same width', function(done) {
-      resizingPlayer.$.audio.play();
-      setTimeout(function(){
-        resizingPlayer.$.audio.pause();
-        var titleBefore = resizingPlayer.querySelector('#title').getBoundingClientRect(),
-            title2Before = resizingPlayer.querySelector('#title2').getBoundingClientRect();
-        assert.equal(Math.round(title2Before.width), titleBefore.width);
+    setup(function() {
+      resizingPlayer = fixture('resizing');
+    });
 
-        // resize document
-        document.body.style.width = window.innerWidth - 200 + "px";
-        var titleAfter = resizingPlayer.querySelector('#title').getBoundingClientRect(),
-            title2After = resizingPlayer.querySelector('#title2').getBoundingClientRect();
-        assert.equal(Math.round(title2After.width), titleAfter.width);
+    test('on window resize both titles have the same width', function() {
+      resizingPlayer._updateVisualProgress(1);
 
-        done();
-      }, 5000);
+      title = resizingPlayer.$.title.getBoundingClientRect();
+      title2 = resizingPlayer.$.title2.getBoundingClientRect();
+      onePercentDelta = title.width/100;
+      // here we use 'closeTo' with 1% delta
+      // because calculated widths are not always strictly equal
+      assert.closeTo(title2.width, title.width, onePercentDelta/2, 'width should be within 1%');
 
+      // resize document
+      document.body.style.width = window.innerWidth - 200 + "px";
+
+      title = resizingPlayer.$.title.getBoundingClientRect();
+      title2 = resizingPlayer.$.title2.getBoundingClientRect();
+      assert.closeTo(title2.width, title.width, onePercentDelta/2, 'width should be within 1%');
     });
 
   });
