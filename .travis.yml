@@ -3,7 +3,7 @@ dist: trusty
 sudo: required
 node_js: stable
 addons:
-  firefox: latest
+  firefox: false
   apt:
     sources:
     - google-chrome
