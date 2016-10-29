@@ -6,40 +6,60 @@
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
 
   <!-- Import the paper-audio-player element -->
+  <link rel="import" href="../../test-fixture/test-fixture.html">
   <link rel="import" href="../paper-audio-player.html">
 </head>
 <body>
 
 <!-- Basic player -->
-<paper-audio-player id="nopreload"
-                    preload="none"
-                    src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"></paper-audio-player>
+<test-fixture id="nopreload">
+  <template>
+    <paper-audio-player preload="none" src="./pink-shades-o-pnr.mp3"></paper-audio-player>
+  </template>
+</test-fixture>
 
-<paper-audio-player id="nopreloadchanged"
-                    preload="none"
-                    src="./pang-cmr.mp3"></paper-audio-player>
+<test-fixture id="nopreloadautoplay">
+  <template>
+    <paper-audio-player auto-play preload="none" src="./pink-shades-o-pnr.mp3"></paper-audio-player>
+  </template>
+</test-fixture>
 
-<paper-audio-player id="nopreloadautoplay"
-                    auto-play
-                    preload="none"
-                    src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"></paper-audio-player>
+<test-fixture id="metapreload">
+  <template>
+    <paper-audio-player preload="metadata" src="./pink-shades-o-pnr.mp3"></paper-audio-player>
+  </template>
+</test-fixture>
 
-<paper-audio-player id="metapreload"
-                    preload="metadata"
-                    src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"></paper-audio-player>
+<test-fixture id="autopreload">
+  <template>
+    <paper-audio-player preload="auto" src="./pink-shades-o-pnr.mp3"></paper-audio-player>
+  </template>
+</test-fixture>
 
-<paper-audio-player id="autopreload"
-                    preload="auto"
-                    src="http://nadikun.com/audio/suit-and-tie-oscar-wylde-remix.mp3"></paper-audio-player>
+<test-fixture id="default">
+  <template>
+    <paper-audio-player src="./pink-shades-o-pnr.mp3"></paper-audio-player>
+  </template>
+</test-fixture>
 
 <script>
-  var noPreloadPlayer = document.getElementById('nopreload');
-  var noPreloadChangedPlayer = document.getElementById('nopreloadchanged');
-  var noPreloadAutoplayPlayer = document.getElementById('nopreloadautoplay');
-  var metaPreloadPlayer = document.getElementById('metapreload');
-  var autoPreloadPlayer = document.getElementById('autopreload');
+  var noPreloadPlayer,
+      noPreloadAutoplayPlayer,
+      metaPreloadPlayer,
+      autoPreloadPlayer,
+      defaultPreloadPlayer;
+
+  setup(function() {
+    noPreloadPlayer = fixture('nopreload');
+    noPreloadAutoplayPlayer = fixture('nopreloadautoplay');
+    metaPreloadPlayer = fixture('metapreload');
+    autoPreloadPlayer = fixture('autopreload');
+    defaultPreloadPlayer = fixture('default');
+  });
 
   suite('<paper-audio-player>', function() {
 
@@ -47,63 +67,41 @@
       assert.equal(noPreloadPlayer.preload, 'none');
       assert.equal(noPreloadPlayer.$.audio.preload, 'none');
       setTimeout(function(){
-        assert.ok(!noPreloadPlayer.error);
         assert.equal(noPreloadPlayer.$.audio.readyState, 0);
         assert.isNaN(noPreloadPlayer.$.audio.duration);
-        assert.notOk(noPreloadPlayer.canBePlayed);
         done();
       }, 2000);
     });
 
-    test('the "preload=none" property is ignored if autoPlay is set', function(done) {
+    test('the "preload=none" property is ignored if autoPlay is set', function() {
       assert.equal(noPreloadAutoplayPlayer.preload, 'none');
       assert.ok(noPreloadAutoplayPlayer.autoPlay);
-      setTimeout(function(){
-        assert.ok(!noPreloadAutoplayPlayer.error);
-        assert.notOk(noPreloadAutoplayPlayer.$.audio.paused);
-        assert.isAtLeast(noPreloadAutoplayPlayer.currentTime, 1);
-        assert.ok(noPreloadAutoplayPlayer.isPlaying);
-        done();
-      }, 2000);
+      assert.equal(noPreloadAutoplayPlayer.$.audio.preload, 'auto');
     });
 
     test('dynamically changed audio file will not be pre-loaded with preload=none', function(done) {
-      assert.notOk(noPreloadChangedPlayer.canBePlayed);
+      noPreloadPlayer.src = 'http://nadikun.com/audio/noclique-day2.wav';
+      assert.equal(noPreloadPlayer.src, 'http://nadikun.com/audio/noclique-day2.wav');
       setTimeout(function(){
-        noPreloadChangedPlayer.src = 'http://nadikun.com/audio/noclique-day2.wav';
-        assert.equal(noPreloadChangedPlayer.src, 'http://nadikun.com/audio/noclique-day2.wav');
-        setTimeout(function(){
-          assert.ok(noPreloadChangedPlayer.$.audio.src.indexOf('noclique-day2.wav') >= 0);
-          assert.ok(!noPreloadChangedPlayer.error);
-          assert.equal(noPreloadChangedPlayer.timeLeft, 0);
-          assert.notOk(noPreloadChangedPlayer.canBePlayed);
-          done();
-        }, 2000);
-      }, 500);
+        assert.ok(noPreloadPlayer.$.audio.src.indexOf('noclique-day2.wav') >= 0);
+        assert.isNaN(noPreloadPlayer.$.audio.duration);
+        done();
+      }, 2000);
     });
 
-    test('defines the "preload=metadata" property', function(done) {
+    test('defines the "preload=metadata" property', function() {
       assert.equal(metaPreloadPlayer.preload, 'metadata');
       assert.equal(metaPreloadPlayer.$.audio.preload, 'metadata');
-      setTimeout(function(){
-        assert.ok(!metaPreloadPlayer.error);
-        assert.isNotNaN(metaPreloadPlayer.timeLeft);
-        assert.ok(metaPreloadPlayer.canBePlayed);
-        assert.notOk(metaPreloadPlayer.isPlaying);
-        done();
-      }, 2000);
     });
 
-    test('defines the "preload=auto" property', function(done) {
+    test('defines the "preload=auto" property', function() {
       assert.equal(autoPreloadPlayer.preload, 'auto');
       assert.equal(autoPreloadPlayer.$.audio.preload, 'auto');
-      setTimeout(function(){
-        assert.ok(!autoPreloadPlayer.error);
-        assert.isAtLeast(autoPreloadPlayer.$.audio.buffered.length, 0);
-        assert.ok(autoPreloadPlayer.canBePlayed);
-        assert.notOk(autoPreloadPlayer.isPlaying);
-        done();
-      }, 2000);
+    });
+
+    test('preload property defaults to "auto" when not set', function() {
+      assert.equal(defaultPreloadPlayer.preload, 'auto');
+      assert.equal(defaultPreloadPlayer.$.audio.preload, 'auto');
     });
 
   });
