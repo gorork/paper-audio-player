@@ -1,0 +1,94 @@
+/* Styling demo page */
+h1, h3, p {
+  font-family: 'Roboto Mono', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400; }
+
+h1, h3 {
+  color: #fff; }
+
+p {
+  font-size: 15px;
+  color: #bbb;
+  top: 10px; }
+
+.row,
+.col {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .row.row-horizontal,
+  .col.row-horizontal {
+    flex-direction: row; }
+  .row.row-vertical,
+  .col.row-vertical {
+    flex-direction: column; }
+
+.row {
+  width: 100%;
+  height: 185px;
+  position: relative;
+  overflow: hidden; }
+  .row:last-child {
+    border-top: 1px dotted lightgrey; }
+  .row.logos {
+    height: 100px; }
+    .row.logos p {
+      top: -20px; }
+  .row.error {
+    height: 160px; }
+  .row.image {
+    height: 400px; }
+  .row p {
+    position: absolute;
+    text-align: center;
+    width: 100%; }
+  .row .logo {
+    width: 120px; }
+
+#header {
+  position: absolute;
+  top: 40px;
+  z-index: 10;
+  text-align: center;
+  width: 100%; }
+  #header h1 {
+    font-size: 25px;
+    margin-bottom: 3px; }
+  #header h3 {
+    font-size: 16px;
+    margin-top: 0;
+    font-weight: 100; }
+  #header a {
+    color: #fff;
+    border-bottom: 3px solid rgba(240, 92, 56, 0.25); }
+    #header a:hover {
+      color: #F05C38;
+      border-bottom: 3px solid #f05c38; }
+
+.image {
+  background: url("https://unsplash.com/photos/t7YycgAoVSw/download") no-repeat;
+  background-size: 100%; }
+
+.col {
+  width: 33%; }
+
+paper-audio-player {
+  width: 80%; }
+
+#footer {
+  margin-bottom: 15px;
+  text-align: center; }
+  #footer p {
+    width: 100%;
+    font-size: 12px;
+    margin: 0; }
+
+a {
+  color: #F05C38;
+  text-decoration: none; }
+  a:hover {
+    border-bottom: 2px solid #F05C38; }
