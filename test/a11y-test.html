@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
+
+
+  <!-- Import the paper-audio-player element -->
+  <link rel="import" href="../../test-fixture/test-fixture.html">
+  <link rel="import" href="../paper-audio-player.html">
+</head>
+<body>
+
+<!-- Resizing player -->
+<test-fixture id="a11y">
+  <template>
+    <paper-audio-player src="./pink-shades-o-pnr.mp3"></paper-audio-player>
+  </template>
+</test-fixture>
+
+<script>
+
+  suite('a11y', function() {
+    var a11y;
+
+    setup(function() {
+      a11y = fixture('a11y');
+    });
+
+    a11ySuite('a11y');
+  });
+
+</script>
+
+</body>
+</html>
