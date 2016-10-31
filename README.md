@@ -1,4 +1,6 @@
-# paper-audio-player [![Build Status](https://travis-ci.org/gorork/paper-audio-player.svg?branch=master)](https://travis-ci.org/gorork/paper-audio-player)
+# paper-audio-player 
+
+[![Build Status](https://travis-ci.org/gorork/paper-audio-player.svg?branch=master)](https://travis-ci.org/gorork/paper-audio-player) [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://beta.webcomponents.org/element/gorork/paper-audio-player)
 
 A custom audio player with material paper style and clean design.
 
@@ -12,8 +14,19 @@ Check the Player live [here](http://nadikun.com/code/paper-audio-player/demo).
 
 Here is an example of code to add a Paper-Audio-Player element to your page:
 
+<!---
+```
+<custom-element-demo>
+  <template>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="paper-audio-player.html">
+    <next-code-block></next-code-block>
+  </template>
+</custom-element-demo>
+```
+-->
 ```html
-<paper-audio-player src="track.mp3" title="STING - Desert Rose" color="#F05C38"></paper-audio-player>
+<paper-audio-player src="http://nadikun.com/audio/demo.mp3" title="Pink Shades - O+PNR" color="#F05C38"></paper-audio-player>
 ```
 
 **Title** and **color** attributes are optional.
@@ -130,13 +143,12 @@ Or, simply navigate to the `/test` directory if you are using Polyserve: `http:/
 
 ## Contributing
 
-1. Fork it!0
+1. Fork it!
 2. Create your feature branch: `git checkout -b new-feature`
-3. Commit your changes: `git commit -m 'Add some awesomeness'`
-4. Push to the branch: `git push origin new-feature`
-5. Submit a pull request!
-
-**Cover your code with tests and make sure all new and existing tests pass locally before pushing.**
+3. Cover your code with tests and make sure all new and existing tests pass locally before pushing.
+4. Commit your changes: `git commit -m 'Add some awesomeness'`
+5. Push to the branch: `git push origin new-feature`
+6. Submit a pull request!
 
 ## License
 
