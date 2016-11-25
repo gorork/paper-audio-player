@@ -1,7 +1,7 @@
 {
   "plugins": {
     "sauce": {
-      "disabled": true,
+      "disabled": false,
       "browsers": [
         {
           "browserName": "microsoftedge",
