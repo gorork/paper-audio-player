@@ -336,6 +336,9 @@ Custom property                             | Description                       
         timeOffset: {
           type: Number,
           value: 0
+        },
+        gaId: {
+          type: String
         }
       },
 
@@ -366,7 +369,6 @@ Custom property                             | Description                       
       ready: function() {
         var player = this;
 
-        //
         // create Player defaults
 
         player.canBePlayed = false;
@@ -374,6 +376,10 @@ Custom property                             | Description                       
         player.ended = false;
         player.error = false;
         player.$.audio.currentTime = player.timeOffset; // apply the audio start time property
+
+        // If 'ga-id' property is set,
+        // prepare Google Analytics tracker
+        if (!!player.gaId) player._setupGATracking();
       },
 
 
@@ -383,15 +389,36 @@ Custom property                             | Description                       
         if (!!e) e.preventDefault();
         var player = this;
 
-        if ( player.canBePlayed ) {
-          return player.isPlaying ? player.$.audio.pause() : player.$.audio.play();
+        if (player.canBePlayed) {
+          if (player.isPlaying) {
+            player._pause();
+          } else {
+            player._play();
+          }
+
         } else if (player.preload === 'none') {
           // If player can't be played, because audio wasn't pre-loaded
           // due to the preload="none" property set,
           // load the audio file at this point and start playing it immediately
           player.$.audio.load();
-          player.$.audio.play();
+          player._play();
         }
+      },
+
+      _play: function() {
+        var player = this;
+        player.$.audio.play();
+
+        // Dispatch 'Play' event to GA
+        if (!!player.gaId) this._dispatchGAEvent('Play');
+      },
+
+      _pause: function() {
+        var player = this;
+        player.$.audio.pause();
+
+        // Dispatch 'Pause' event to GA
+        if (!!player.gaId) this._dispatchGAEvent('Pause');
       },
 
       //
@@ -401,7 +428,7 @@ Custom property                             | Description                       
         if (!!e) e.preventDefault();
         var player = this;
         player.$.audio.currentTime = 0;
-        if ( !player.isPlaying ) player.$.audio.play();
+        if (!player.isPlaying) player._play();
       },
 
 
@@ -422,7 +449,7 @@ Custom property                             | Description                       
         // If player has auto-play attribute set,
         // it ignores preload="none" property and starts playing on load.
         // This behavior corresponds to the native audio element behavior.
-        if (player.autoPlay) player.$.audio.play();
+        if (player.autoPlay) player._play();
       },
 
 
@@ -460,7 +487,7 @@ Custom property                             | Description                       
         }
 
         player._updatePlayPosition(newTime);
-        if (!player.isPlaying) player.$.audio.play();
+        if (!player.isPlaying) player._play();
       },
 
 
@@ -470,7 +497,9 @@ Custom property                             | Description                       
         var player = this;
         player.timer = {};
 
-        if (player.timer.sliderUpdateInterval) { clearInterval(player.timer.sliderUpdateInterval); }
+        if (player.timer.sliderUpdateInterval) {
+          clearInterval(player.timer.sliderUpdateInterval);
+        }
 
         player.timer.sliderUpdateInterval = setInterval( function(){
           if ( player.isPlaying ) {
@@ -501,6 +530,9 @@ Custom property                             | Description                       
         player.ended = true;
         player.isPlaying = false;
         player.$.replay.style.opacity = 1;    // display Replay icon
+
+        // Dispatch 'Ended' event to GA
+        if (!!player.gaId) this._dispatchGAEvent('Ended');
       },
 
 
@@ -535,16 +567,16 @@ Custom property                             | Description                       
 
         if (player.canBePlayed) {
           player._updateProgressBar(e);
-          if (!player.isPlaying) player.$.audio.play();
+          if (!player.isPlaying) player._play();
 
           // When preload="none" is being used,
           // player should first try to load the audio,
           // and when it's successfully loaded, recalculate the progress bar
         } else if (player.preload === 'none') {
           player.$.audio.load();
-          player.$.audio.addEventListener('loadedmetadata', function() {
+          player.$.audio.addEventListener('loadedmetadata', function () {
             player._updateProgressBar(e);
-            if (!player.isPlaying) player.$.audio.play();
+            if (!player.isPlaying) player._play();
           }, false);
         }
       },
@@ -595,8 +627,8 @@ Custom property                             | Description                       
         var player = this;
 
         if (player.isPlaying) {
-          player.$.audio.pause();
-          player.$.audio.play();
+          player._pause();
+          player._play();
         }
       },
 
@@ -619,6 +651,35 @@ Custom property                             | Description                       
 
       _setPreload: function(autoplay, preload) {
         return autoplay ? 'auto' : preload;
+      },
+
+      //
+      // Dispatch an event to Google Analytics
+
+      _dispatchGAEvent: function (action) {
+        var player = this;
+
+        window.ga('audioTracker.send', 'event', {
+          eventCategory: 'Paper Audio Player',
+          eventAction: action,
+          eventLabel: player.title || player.src,
+          value: player.$.audio.currentTime
+        });
+      },
+
+      _setupGATracking: function () {
+        var player = this;
+
+        // check if GA tracking exists on the page
+        // if not - load it
+        if (window.ga === undefined) {
+          (function (i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        }
+
+        window.ga('create', player.gaId, 'auto', 'audioTracker');
       }
     });
   </script>
