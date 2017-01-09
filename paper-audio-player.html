@@ -567,7 +567,13 @@ Custom property                             | Description                       
 
         if (player.canBePlayed) {
           player._updateProgressBar(e);
-          if (!player.isPlaying) player._play();
+          if (!player.isPlaying) {
+            player._play();
+          } else {
+            // Audio is already playing,
+            // so dispatch 'Scrub' event to GA
+            if (!!player.gaId) this._dispatchGAEvent('Scrub');
+          }
 
           // When preload="none" is being used,
           // player should first try to load the audio,
@@ -576,7 +582,13 @@ Custom property                             | Description                       
           player.$.audio.load();
           player.$.audio.addEventListener('loadedmetadata', function () {
             player._updateProgressBar(e);
-            if (!player.isPlaying) player._play();
+            if (!player.isPlaying) {
+              player._play();
+            } else {
+              // Audio is already playing,
+              // so dispatch 'Scrub' event to GA
+              if (!!player.gaId) this._dispatchGAEvent('Scrub');
+            }
           }, false);
         }
       },
@@ -662,8 +674,8 @@ Custom property                             | Description                       
         window.ga('audioTracker.send', 'event', {
           eventCategory: 'Paper Audio Player',
           eventAction: action,
-          eventLabel: player.title || player.src,
-          value: player.$.audio.currentTime
+          eventLabel: !!player.title ? player.title : player.src,
+          eventValue: player.$.audio.currentTime
         });
       },
 
@@ -672,14 +684,16 @@ Custom property                             | Description                       
 
         // check if GA tracking exists on the page
         // if not - load it
-        if (window.ga === undefined) {
-          (function (i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        }
+        if (window) {
+          if (!window.ga) {
+            (function (i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          }
 
-        window.ga('create', player.gaId, 'auto', 'audioTracker');
+          window.ga('create', player.gaId, 'auto', 'audioTracker');
+        }
       }
     });
   </script>
