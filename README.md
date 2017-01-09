@@ -94,7 +94,7 @@ Attribute     | Options                                 | Description
 
 #### Google Analytics
 
-If you add your unique GA tracking ID to a player (e.g. `ga-id="UA-000000-01"`), it will dispatch the following events to your GA: **Play**, **Pause**, **Ended**.
+If you add your unique GA tracking ID to a player (e.g. `ga-id="UA-000000-01"`), it will dispatch the following events to your GA: **Play**, **Pause**, **Scrub**, **Ended**.
 **Ended** means that audio played through to the very end.
 
 For each event Paper Player will pass an **event label** property that contains a `title` (if specified) or `src` value of an audio file.
